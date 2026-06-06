@@ -1,0 +1,39 @@
+# Yosys-скрипт синтеза booth_multiplier_wrapper в Nangate45.
+# Конфигурация: BASELINE.
+
+# Чтение исходников.
+read_verilog ../rtl/booth_encoder.v
+read_verilog ../rtl/booth_ppg.v
+read_verilog ../rtl/booth_multiplier.v
+read_verilog ../rtl/booth_multiplier_exact_recoded.v
+read_verilog ../rtl/booth_recoder_pair_exact.v
+read_verilog ../rtl/booth_multiplier_approx_recoded.v
+read_verilog ../rtl/booth_recoder_pair_approx.v
+read_verilog ../rtl/booth_multiplier_wrapper.v
+
+# Выбираем верхний модуль с конкретными параметрами.
+# Здесь — BASELINE; для других конфигов параметры будут другие.
+hierarchy -check -top booth_multiplier_wrapper -chparam DUT_TYPE 0
+
+# Стандартный pipeline.
+proc
+opt -full
+techmap
+opt -fast
+flatten
+
+# Мапинг регистров под Nangate45.
+dfflibmap -liberty lib/NangateOpenCellLibrary_typical.lib
+
+# Мапинг комбинационной логики через ABC.
+abc -liberty lib/NangateOpenCellLibrary_typical.lib
+
+# Чистка.
+opt_clean -purge
+setundef -undriven -zero
+
+# Отчёт по площади.
+tee -o reports/area_baseline.rpt stat -liberty lib/NangateOpenCellLibrary_typical.lib
+
+# Netlist для последующей симуляции и анализа мощности.
+write_verilog -noattr netlists/baseline.v
