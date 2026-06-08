@@ -1,41 +1,39 @@
 
-20. Printing statistics.
+29. Printing statistics.
 
 === booth_multiplier_wrapper ===
 
         +----------Local Count, excluding submodules.
         |        +-Local Area, excluding submodules.
         |        | 
-     1058        - wires
-     1180        - wire bits
+     1034        - wires
+     1156        - wire bits
         8        - public wires
       130        - public wire bits
         5        - ports
        66        - port bits
-     1082 1.61E+03 cells
-       28   29.792   AND2_X1
-       15    19.95   AND3_X1
+     1058 1.59E+03 cells
+       19   20.216   AND2_X1
+        9    11.97   AND3_X1
         4    6.384   AND4_X1
         3     3.99   AOI211_X1
-       69   73.416   AOI21_X1
-        1    1.596   AOI221_X1
-       91   121.03   AOI22_X1
+       73   77.672   AOI21_X1
+       89   118.37   AOI22_X1
        64   340.48   DFFR_X1
-       24   12.768   INV_X1
-       30    55.86   MUX2_X1
-      128  102.144   NAND2_X1
-       23   24.472   NAND3_X1
-        7     9.31   NAND4_X1
-      104   82.992   NOR2_X1
+       15     7.98   INV_X1
+       31   57.722   MUX2_X1
+      122   97.356   NAND2_X1
+       16   17.024   NAND3_X1
+        6     7.98   NAND4_X1
+      125    99.75   NOR2_X1
         5     5.32   NOR3_X1
-        5     6.65   OAI211_X1
-       65    69.16   OAI21_X1
-        1    1.596   OAI221_X1
-       29   30.856   OR2_X1
-        6     7.98   OR3_X1
-      212  338.352   XNOR2_X1
-      168  268.128   XOR2_X1
+        3     3.99   OAI211_X1
+       66   70.224   OAI21_X1
+       11   11.704   OR2_X1
+        3     3.99   OR3_X1
+      195   311.22   XNOR2_X1
+      199  317.604   XOR2_X1
 
-   Chip area for module '\booth_multiplier_wrapper': 1612.226000
-     of which used for sequential elements: 340.480000 (21.12%)
+   Chip area for module '\booth_multiplier_wrapper': 1590.946000
+     of which used for sequential elements: 340.480000 (21.40%)
 

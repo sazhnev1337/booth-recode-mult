@@ -6,10 +6,20 @@ module tb_booth_multiplier_exact_recoded;
     wire signed [31:0] p;
     wire signed [31:0] p_ref;
 
-    booth_multiplier dut (
-        .a(a),
-        .b(b),
-        .p(p)
+//  booth_multiplier dut (
+//      .a(a),
+//      .b(b),
+//      .p(p)
+//  );
+
+    // booth_multiplier_exact_recoded_b dut (
+    //     .a(a),
+    //     .b(b),
+    //     .p(p)
+    // );
+
+    booth_multiplier_approx_recoded_b #(.APPROX_PAIRS(0)) dut_exact (
+        .a(a), .b(b), .p(p)
     );
 
     assign p_ref = a * b;

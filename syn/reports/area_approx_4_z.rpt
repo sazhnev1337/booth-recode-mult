@@ -1,0 +1,39 @@
+
+29. Printing statistics.
+
+=== booth_multiplier_wrapper ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     1034        - wires
+     1156        - wire bits
+        8        - public wires
+      130        - public wire bits
+        5        - ports
+       66        - port bits
+     1058 1.57E+03 cells
+       17   18.088   AND2_X1
+        7     9.31   AND3_X1
+        3    4.788   AND4_X1
+        3     3.99   AOI211_X1
+       63   67.032   AOI21_X1
+      120    159.6   AOI22_X1
+       64   340.48   DFFR_X1
+       27   14.364   INV_X1
+        1    1.862   MUX2_X1
+      113   90.174   NAND2_X1
+       34   36.176   NAND3_X1
+       12    15.96   NAND4_X1
+      115    91.77   NOR2_X1
+        9    9.576   NOR3_X1
+        5     6.65   OAI211_X1
+       62   65.968   OAI21_X1
+        1    1.596   OAI221_X1
+       10    10.64   OR2_X1
+      206  328.776   XNOR2_X1
+      186  296.856   XOR2_X1
+
+   Chip area for module '\booth_multiplier_wrapper': 1573.656000
+     of which used for sequential elements: 340.480000 (21.64%)
+

@@ -1,43 +1,48 @@
 #!/bin/bash
 set -e
 
-# Usage: ./synth.sh CONFIG_NAME DUT_TYPE [APPROX_PAIRS]
-# Examples:
-#   ./synth.sh baseline 0
-#   ./synth.sh exact    1
-#   ./synth.sh approx_1 2 1
-#   ./synth.sh approx_2 2 2
-
 CONFIG=$1
 DUT_TYPE=$2
 APPROX_PAIRS=${3:-1}
+USE_ZEROED_PPG=${4:-0}
+USE_LEVEL_B=${5:-0}
 
 if [ -z "$CONFIG" ] || [ -z "$DUT_TYPE" ]; then
-    echo "Usage: $0 CONFIG_NAME DUT_TYPE [APPROX_PAIRS]"
+    echo "Usage: $0 CONFIG_NAME DUT_TYPE [APPROX_PAIRS] [USE_ZEROED_PPG] [USE_LEVEL_B]"
     exit 1
 fi
 
-mkdir -p netlists reports
+mkdir -p netlists reports _gen
 
-# Параметр для APPROX_PAIRS подаётся только если DUT_TYPE=2,
-# иначе hierarchy воткнётся в неиспользованный параметр.
+PARAMS="-chparam DUT_TYPE $DUT_TYPE"
 if [ "$DUT_TYPE" = "2" ]; then
-    PARAM_LINE="hierarchy -check -top booth_multiplier_wrapper -chparam DUT_TYPE $DUT_TYPE -chparam APPROX_PAIRS $APPROX_PAIRS"
-else
-    PARAM_LINE="hierarchy -check -top booth_multiplier_wrapper -chparam DUT_TYPE $DUT_TYPE"
+    PARAMS="$PARAMS -chparam APPROX_PAIRS $APPROX_PAIRS"
+fi
+if [ "$DUT_TYPE" != "0" ]; then
+    PARAMS="$PARAMS -chparam USE_ZEROED_PPG $USE_ZEROED_PPG"
+    PARAMS="$PARAMS -chparam USE_LEVEL_B $USE_LEVEL_B"
 fi
 
-cat > _synth_${CONFIG}.ys <<EOF
+cat > _gen/synth_${CONFIG}.ys <<EOF
 read_verilog ../rtl/booth_encoder.v
 read_verilog ../rtl/booth_ppg.v
+read_verilog ../rtl/booth_ppg_zeroed.v
 read_verilog ../rtl/booth_multiplier.v
 read_verilog ../rtl/booth_multiplier_exact_recoded.v
+read_verilog ../rtl/booth_multiplier_exact_recoded_zeroed.v
+read_verilog ../rtl/booth_multiplier_exact_recoded_b.v
 read_verilog ../rtl/booth_recoder_pair_exact.v
+read_verilog ../rtl/booth_recoder_pair_exact_b.v
+read_verilog ../rtl/booth_recoder_pair_odd_exact.v
 read_verilog ../rtl/booth_multiplier_approx_recoded.v
+read_verilog ../rtl/booth_multiplier_approx_recoded_zeroed.v
+read_verilog ../rtl/booth_multiplier_approx_recoded_b.v
 read_verilog ../rtl/booth_recoder_pair_approx.v
+read_verilog ../rtl/booth_recoder_pair_approx_b.v
+read_verilog ../rtl/booth_recoder_pair_odd_approx.v
 read_verilog ../rtl/booth_multiplier_wrapper.v
 
-${PARAM_LINE}
+hierarchy -check -top booth_multiplier_wrapper ${PARAMS}
 
 proc
 opt -full
@@ -55,7 +60,7 @@ tee -o reports/area_${CONFIG}.rpt stat -liberty lib/NangateOpenCellLibrary_typic
 write_verilog -noattr netlists/${CONFIG}.v
 EOF
 
-yosys _synth_${CONFIG}.ys
+yosys _gen/synth_${CONFIG}.ys
 
 echo ""
 echo "=== Done: $CONFIG ==="
