@@ -4,6 +4,6 @@ pwr/_gen/
 sim/vvp/
 doc/notes.txt
 py/.venv
-doc/results/
+doc/results/*
 !doc/results/results.pdf
 
