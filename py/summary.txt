@@ -1,0 +1,10 @@
+   distr       mode         NMED         MRED       max ED  zero err%
+--------------------------------------------------------------------------------
+ uniform   standard    0.000e+00    0.000e+00            0     100.00
+ uniform      exact    0.000e+00    0.000e+00            0     100.00
+ uniform   approx_1    3.336e-06    1.302e-04       131072      79.71
+ uniform   approx_2    5.613e-05    1.633e-03      2226796      65.54
+   gauss   standard    0.000e+00    0.000e+00            0     100.00
+   gauss      exact    0.000e+00    0.000e+00            0     100.00
+   gauss   approx_1    1.304e-06    3.771e-04       131072      79.66
+   gauss   approx_2    2.194e-05    4.424e-03      2097152      65.44

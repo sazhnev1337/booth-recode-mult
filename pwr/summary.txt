@@ -1,0 +1,9 @@
+
+=== Summary ===
+config                      uniform_fast   uniform_slow     gauss_fast     gauss_slow
+naive                           4.07e-04       3.43e-04       4.05e-04       3.35e-04
+booth                           3.39e-04       2.57e-04       3.36e-04       2.52e-04
+booth_extrec_standard           3.12e-04       2.48e-04       3.10e-04       2.43e-04
+booth_extrec_exact              3.10e-04       2.42e-04       3.07e-04       2.36e-04
+booth_extrec_approx_1           3.08e-04       2.39e-04       3.06e-04       2.33e-04
+booth_extrec_approx_2           3.06e-04       2.38e-04       3.04e-04       2.31e-04

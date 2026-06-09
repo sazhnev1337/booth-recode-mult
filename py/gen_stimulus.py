@@ -1,20 +1,24 @@
 #!/usr/bin/env python3
 """
-Генерация файла стимулов для tb_power.
-Параметры — распределение и период обновления коэффициента a.
-Операнд b всегда меняется каждый такт.
+Генерация stimulus-файла для умножителей с внешним recoder.
+
+Формат файла: три значения на пару (по строке каждое):
+    a_value_signed
+    b_value_signed
+    recoded_24bit_unsigned
 
 Usage:
-    python3 gen_stimulus.py <distribution> <update_period> <output_path>
+    gen_stimulus.py <distribution> <update_period> <recoding_mode> <output_path>
 
 Examples:
-    python3 gen_stimulus.py uniform 1   ../sim/data/stimulus_uniform_fast.txt
-    python3 gen_stimulus.py uniform 50  ../sim/data/stimulus_uniform_slow.txt
-    python3 gen_stimulus.py gauss   50  ../sim/data/stimulus_gauss_slow.txt
+    gen_stimulus.py uniform 1   standard  ../sim/data/stim_uniform_fast_standard.txt
+    gen_stimulus.py gauss   50  exact     ../sim/data/stim_gauss_slow_exact.txt
+    gen_stimulus.py gauss   50  approx_2  ../sim/data/stim_gauss_slow_approx_2.txt
 """
 
 import sys
 import random
+from booth_recoder import recode, digits_to_24bit
 
 N = 10000
 SIGMA = 8000
@@ -26,33 +30,34 @@ def sample(distribution, rng):
         return rng.randint(-32768, 32767)
     elif distribution == "gauss":
         x = int(rng.gauss(0, SIGMA))
-        # клиппинг к диапазону signed16
         return max(-32768, min(32767, x))
     else:
         raise ValueError(f"unknown distribution: {distribution}")
 
 
 def main():
-    if len(sys.argv) != 4:
+    if len(sys.argv) != 5:
         print(__doc__)
         sys.exit(1)
 
     distribution = sys.argv[1]
     update_period = int(sys.argv[2])
-    out_path = sys.argv[3]
+    recoding_mode = sys.argv[3]
+    out_path = sys.argv[4]
 
     rng = random.Random(SEED)
-
     a_current = sample(distribution, rng)
+    a_recoded_current = digits_to_24bit(recode(a_current, recoding_mode))
+
     with open(out_path, "w") as f:
         for i in range(N):
-            # a обновляется раз в update_period тактов
             if i > 0 and i % update_period == 0:
                 a_current = sample(distribution, rng)
+                a_recoded_current = digits_to_24bit(recode(a_current, recoding_mode))
             b = sample(distribution, rng)
-            f.write(f"{a_current}\n{b}\n")
+            f.write(f"{a_current}\n{b}\n{a_recoded_current}\n")
 
-    print(f"Generated {N} pairs ({distribution}, update_period={update_period}) -> {out_path}")
+    print(f"Generated {N} samples ({distribution}, period={update_period}, mode={recoding_mode}) -> {out_path}")
 
 
 if __name__ == "__main__":

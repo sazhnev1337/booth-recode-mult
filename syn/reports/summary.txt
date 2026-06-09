@@ -1,0 +1,4 @@
+=== Summary ===
+naive           2309.146000 um^2
+booth           1624.728000 um^2
+booth_extrec    1517.530000 um^2
