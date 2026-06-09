@@ -1,5 +1,4 @@
-
-=== Summary ===
+=== Power Summary (Total power in Watts) ===
 config                      uniform_fast   uniform_slow     gauss_fast     gauss_slow
 naive                           4.07e-04       3.43e-04       4.05e-04       3.35e-04
 booth                           3.39e-04       2.57e-04       3.36e-04       2.52e-04

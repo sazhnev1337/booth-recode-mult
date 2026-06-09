@@ -139,6 +139,91 @@ def recode(value, mode):
     return digits
 
 
+def recode_with_stats(value, mode):
+    """
+    Как recode(), но дополнительно возвращает статистику о срабатываниях паттернов.
+
+    Возвращает: (digits, stats)
+        digits — список из 8 троек (neg, one, two), как у recode().
+        stats — dict со счётчиками:
+            'natural_zeros'  — число позиций i=0..7 с обычной Booth-цифрой 0
+            'exact_recodes'  — число срабатываний точного паттерна (00100, 11011)
+            'approx_recodes' — число срабатываний приближённого паттерна
+                               (00101, 00110, 11010, 11001)
+    """
+    digits = []
+    for i in range(8):
+        a_high = (value >> (2*i+1)) & 1 if (2*i+1) < 16 else (value >> 15) & 1
+        a_mid  = (value >> (2*i))   & 1 if (2*i) < 16 else (value >> 15) & 1
+        a_low  = (value >> (2*i-1)) & 1 if (2*i-1) >= 0 and (2*i-1) < 16 else 0
+        triplet = (a_high << 2) | (a_mid << 1) | a_low
+        digits.append(list(booth_digit(triplet)))
+
+    if mode == 'exact':
+        approx_until = 0
+    elif mode.startswith('approx_'):
+        n = int(mode.split('_')[1])
+        approx_until = 2 * n
+    elif mode == 'standard':
+        approx_until = 0  # для standard recode-проходы пропускаются ниже
+    else:
+        raise ValueError(f"unknown mode: {mode}")
+
+    n_exact_recodes = 0
+    n_approx_recodes = 0
+
+    if mode != 'standard':
+        skip_next = False
+        i = 0
+        while i < 7:
+            if skip_next:
+                skip_next = False
+                i += 1
+                continue
+
+            window = get_window(value, i)
+            approx_allowed = (i < approx_until)
+
+            if check_exact_pattern(window):
+                neg_i, one_i, two_i = digits[i]
+                digits[i] = [neg_i ^ 1, 0, 1]
+                digits[i+1] = [0, 0, 0]
+                skip_next = True
+                n_exact_recodes += 1
+            elif approx_allowed and check_approx_pattern(window):
+                if window in (0b00100, 0b00101, 0b00110):
+                    digits[i] = [0, 0, 1]
+                else:
+                    digits[i] = [1, 0, 1]
+                digits[i+1] = [0, 0, 0]
+                skip_next = True
+                n_approx_recodes += 1
+
+            i += 1
+
+    # Считаем natural zeros — позиции с обычной Booth-цифрой 0 (one=0 и two=0).
+    # Важно: считаем уже ПОСЛЕ перекодирования, потому что recode может занулить позицию
+    # i+1, и это не natural zero, а зануление от recode.
+    #
+    # Самый чистый способ: пересчитать «нативные» нули из исходного value, до перекодирования.
+    # Это позиции i, у которых триплет = 000 или 111.
+    n_natural_zeros = 0
+    for i in range(8):
+        a_high = (value >> (2*i+1)) & 1 if (2*i+1) < 16 else (value >> 15) & 1
+        a_mid  = (value >> (2*i))   & 1 if (2*i) < 16 else (value >> 15) & 1
+        a_low  = (value >> (2*i-1)) & 1 if (2*i-1) >= 0 and (2*i-1) < 16 else 0
+        triplet = (a_high << 2) | (a_mid << 1) | a_low
+        if triplet == 0b000 or triplet == 0b111:
+            n_natural_zeros += 1
+
+    stats = {
+        'natural_zeros':  n_natural_zeros,
+        'exact_recodes':  n_exact_recodes,
+        'approx_recodes': n_approx_recodes,
+    }
+
+    return digits, stats
+
 def digits_to_24bit(digits):
     """Упаковывает 8 троек в 24-битный вектор: {two[7:0], one[7:0], neg[7:0]}."""
     neg_bits = 0
