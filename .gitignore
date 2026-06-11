@@ -6,4 +6,8 @@ doc/notes.txt
 py/.venv
 doc/results/*
 !doc/results/results.pdf
-
+doc/presentation/
+!doc/presentation/presentation.pdf
+!doc/presentation/presentation.tex
+!doc/presentation/preamble.tex
+.claude/

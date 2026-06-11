@@ -11,6 +11,6 @@ module booth_encoder (
 
     assign neg = a_high;
     assign one = a_mid ^ a_low;
-    assign two = (a_high & ~a_mid & ~a_low) | (~a_high & a_mid & a_low);
+    assign two = (a_high ^ a_mid) & ~one;
 
 endmodule

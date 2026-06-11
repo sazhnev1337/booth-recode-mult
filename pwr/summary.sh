@@ -4,7 +4,7 @@ get_total() {
     grep "^Total" "$1" | head -1 | awk '{print $5}'
 }
 
-SCENARIOS="uniform_fast uniform_slow gauss_fast gauss_slow"
+SCENARIOS="uniform_fast uniform_slow  gauss_fast gauss_slow"
 EXTREC_MODES="standard exact approx_1 approx_2"
 
 {
@@ -12,13 +12,6 @@ EXTREC_MODES="standard exact approx_1 approx_2"
     printf "%-25s" "config"
     for scn in $SCENARIOS; do
         printf " %14s" "$scn"
-    done
-    echo ""
-
-    printf "%-25s" "naive"
-    for scn in $SCENARIOS; do
-        val=$(get_total "reports/power_naive_${scn}.rpt")
-        printf " %14s" "$val"
     done
     echo ""
 

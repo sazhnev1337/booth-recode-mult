@@ -22,6 +22,7 @@ module tb_mult_booth_extrec;
     integer fd;
     integer code;
     integer i;
+    integer n_samples;
     integer a_val, b_val, recoded_val;
     reg [8*64-1:0] stimulus_path;
 
@@ -38,6 +39,9 @@ module tb_mult_booth_extrec;
         if (!$value$plusargs("STIM=%s", stimulus_path)) begin
             stimulus_path = "data/stim_uniform_fast_exact.txt";
         end
+        if (!$value$plusargs("N=%d", n_samples)) begin
+            n_samples = 10000;
+        end
 
         fd = $fopen(stimulus_path, "r");
         if (fd == 0) begin
@@ -45,9 +49,9 @@ module tb_mult_booth_extrec;
             $finish;
         end
 
-        $display("Reading stimulus from: %0s", stimulus_path);
+        $display("Reading stimulus from: %0s (N=%0d)", stimulus_path, n_samples);
 
-        for (i = 0; i < 10000; i = i + 1) begin
+        for (i = 0; i < n_samples; i = i + 1) begin
             code = $fscanf(fd, "%d\n%d\n%d\n", a_val, b_val, recoded_val);
             if (code != 3) begin
                 $display("ERROR: stimulus file ended early at i=%0d", i);

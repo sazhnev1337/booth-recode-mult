@@ -31,13 +31,12 @@ def read_power(rpt_path):
 
 def get_all_data():
     """Читает все мощности из reports/, возвращает dict[config][scenario] -> µW."""
-    scenarios = ['uniform_fast', 'uniform_slow', 'gauss_fast', 'gauss_slow']
+    scenarios = ['uniform_fast', 'uniform_slow','uniform_very_slow', 'gauss_fast', 'gauss_slow', 'gauss_very_slow']
     extrec_modes = ['standard', 'exact', 'approx_1', 'approx_2']
     data = {}
 
     for scn in scenarios:
-        # naive и booth — по одному файлу.
-        data.setdefault('naive', {})[scn] = read_power(REPORTS_DIR / f"power_naive_{scn}.rpt") * 1e6
+        #  booth 
         data.setdefault('booth', {})[scn] = read_power(REPORTS_DIR / f"power_booth_{scn}.rpt") * 1e6
 
         # booth_extrec — по файлу на каждый режим.
@@ -52,14 +51,14 @@ def get_all_data():
 
 def plot_main_comparison(data):
     """Главный график: все DUT в gauss_slow."""
-    configs = ['naive', 'booth',
+    configs = ['booth',
                'booth_extrec_standard', 'booth_extrec_exact',
                'booth_extrec_approx_1', 'booth_extrec_approx_2']
-    short_names = ['naive\n(a*b)', 'booth\n(internal\nencoder)',
+    short_names = ['booth\n(internal\nencoder)',
                    'booth_extrec\nstandard', 'booth_extrec\nexact',
                    'booth_extrec\napprox_1', 'booth_extrec\napprox_2']
 
-    values = [data[cfg]['gauss_slow'] for cfg in configs]
+    values = [data[cfg]['gauss_very_slow'] for cfg in configs]
 
     colors = ['#888888', '#3b82f6',
               '#10b981', '#10b981', '#ef4444', '#ef4444']
@@ -100,12 +99,14 @@ def plot_scaling_by_recoding(data):
     modes = ['standard', 'exact', 'approx_1', 'approx_2']
     x = np.arange(len(modes))
 
-    scenarios = ['uniform_fast', 'uniform_slow', 'gauss_fast', 'gauss_slow']
+    scenarios = ['uniform_fast', 'uniform_slow', 'uniform_very_slow', 'gauss_fast', 'gauss_slow', 'gauss_very_slow']
     colors = {
-        'uniform_fast': '#1f77b4',
-        'uniform_slow': '#aec7e8',
-        'gauss_fast':   '#d62728',
-        'gauss_slow':   '#ff9896',
+        'uniform_fast': "#09609f",
+        'uniform_slow': "#5d92d7",
+        'uniform_very_slow': "#aad5f9",
+        'gauss_fast':   "#d71717",
+        'gauss_slow':   "#f04744",
+        'gauss_very_slow': "#ff8086",
     }
 
     fig, ax = plt.subplots(figsize=(9, 6))

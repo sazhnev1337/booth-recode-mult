@@ -20,7 +20,6 @@ import sys
 import random
 from booth_recoder import recode, digits_to_24bit
 
-N = 10000
 SIGMA = 8000
 SEED = 0xDEADBEEF
 
@@ -36,7 +35,7 @@ def sample(distribution, rng):
 
 
 def main():
-    if len(sys.argv) != 5:
+    if len(sys.argv) not in (5, 6):
         print(__doc__)
         sys.exit(1)
 
@@ -44,6 +43,7 @@ def main():
     update_period = int(sys.argv[2])
     recoding_mode = sys.argv[3]
     out_path = sys.argv[4]
+    N = int(sys.argv[5]) if len(sys.argv) == 6 else 100000
 
     rng = random.Random(SEED)
     a_current = sample(distribution, rng)

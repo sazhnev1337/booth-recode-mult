@@ -1,8 +1,29 @@
-=== Power Summary (Total power in Watts) ===
+=== Analyzing power (lib=nangate) ===
+  booth_uniform_fast
+  booth_uniform_slow
+  booth_gauss_fast
+  booth_gauss_slow
+  booth_extrec_uniform_fast_standard
+  booth_extrec_uniform_fast_exact
+  booth_extrec_uniform_fast_approx_1
+  booth_extrec_uniform_fast_approx_2
+  booth_extrec_uniform_slow_standard
+  booth_extrec_uniform_slow_exact
+  booth_extrec_uniform_slow_approx_1
+  booth_extrec_uniform_slow_approx_2
+  booth_extrec_gauss_fast_standard
+  booth_extrec_gauss_fast_exact
+  booth_extrec_gauss_fast_approx_1
+  booth_extrec_gauss_fast_approx_2
+  booth_extrec_gauss_slow_standard
+  booth_extrec_gauss_slow_exact
+  booth_extrec_gauss_slow_approx_1
+  booth_extrec_gauss_slow_approx_2
+
+=== Summary ===
 config                      uniform_fast   uniform_slow     gauss_fast     gauss_slow
-naive                           4.07e-04       3.43e-04       4.05e-04       3.35e-04
-booth                           3.39e-04       2.57e-04       3.36e-04       2.52e-04
-booth_extrec_standard           3.12e-04       2.48e-04       3.10e-04       2.43e-04
-booth_extrec_exact              3.10e-04       2.42e-04       3.07e-04       2.36e-04
-booth_extrec_approx_1           3.08e-04       2.39e-04       3.06e-04       2.33e-04
-booth_extrec_approx_2           3.06e-04       2.38e-04       3.04e-04       2.31e-04
+booth                           3.11e-04       2.49e-04       3.09e-04       2.43e-04
+booth_extrec_standard           3.13e-04       2.56e-04       3.10e-04       2.50e-04
+booth_extrec_exact              3.11e-04       2.51e-04       3.08e-04       2.44e-04
+booth_extrec_approx_1           3.09e-04       2.48e-04       3.06e-04       2.42e-04
+booth_extrec_approx_2           3.07e-04       2.45e-04       3.05e-04       2.39e-04

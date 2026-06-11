@@ -1,0 +1,107 @@
+% ── Шрифты и язык ───────────────────────────────────────────
+
+
+% ── Шрифты и язык ───────────────────────────────────────────
+\usepackage{fontspec}
+\usepackage[english, russian]{babel} % Russian — последний, значит основной
+\setmainfont{Times New Roman}
+
+% ── Математика ──────────────────────────────────────────────
+\usepackage{amsmath, amssymb}
+\usepackage{unicode-math}
+
+% ── Графика ─────────────────────────────────────────────────
+\usepackage{graphicx}   % Вставка изображений
+\graphicspath{{../../py/figures/}{../schemes}{media/}} % Указываем путь к изображениям
+\usepackage{booktabs}   % Таблицы
+\usepackage{xcolor}     % Управление цветом
+
+% ============================================================
+%  ЦВЕТОВАЯ СХЕМА
+% ============================================================
+\definecolor{mipt-blue}{RGB}{0, 63, 127}      % основной тёмно-синий
+\definecolor{mipt-light}{RGB}{210, 225, 245}   % светлый фон блоков
+\definecolor{mipt-accent}{RGB}{200, 30, 50}    % акцент (красный)
+\definecolor{text-dark}{RGB}{20, 20, 20}
+
+% ============================================================
+%  ТЕМА BEAMER
+% ============================================================
+\usetheme{default}
+\usecolortheme{default}
+\usefonttheme{serif}          % шрифты с засечками по всей презентации
+
+% Цвета элементов
+\setbeamercolor{frametitle}{fg=white, bg=mipt-blue}
+\setbeamercolor{title}{fg=white}
+\setbeamercolor{subtitle}{fg=mipt-light}
+\setbeamercolor{author}{fg=mipt-light}
+\setbeamercolor{date}{fg=mipt-light}
+\setbeamercolor{institute}{fg=mipt-light}
+\setbeamercolor{normal text}{fg=text-dark}
+\setbeamercolor{structure}{fg=mipt-blue}
+\setbeamercolor{block title}{fg=white, bg=mipt-blue}
+\setbeamercolor{block body}{fg=text-dark, bg=mipt-light}
+\setbeamercolor{alerted text}{fg=mipt-accent}
+\setbeamercolor{itemize item}{fg=mipt-blue}
+\setbeamercolor{itemize subitem}{fg=mipt-blue}
+\setbeamercolor{enumerate item}{fg=mipt-blue}
+
+% Заголовок фрейма
+\setbeamerfont{frametitle}{size=\large, series=\bfseries, family=\rmfamily}
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{subtitle}{size=\normalsize}
+\setbeamerfont{block title}{size=\normalsize, series=\bfseries}
+\setbeamerfont{itemize/enumerate body}{size=\normalsize}
+
+% Убираем навигационные символы
+\setbeamertemplate{navigation symbols}{}
+
+% Нумерация слайдов в нижнем правом углу
+\setbeamertemplate{footline}{%
+  \hfill
+  \usebeamerfont{footline}%
+  \textcolor{mipt-blue}{\insertframenumber\,/\,\inserttotalframenumber}%
+  \hspace{6pt}\vspace{4pt}
+}
+
+% Правильный заголовок фрейма с фоном и отступами
+\setbeamertemplate{frametitle}{%
+    \nointerlineskip % Убирает лишний микро-пробел сверху
+    \begin{beamercolorbox}[wd=\paperwidth, ht=3ex, dp=1.5ex, leftskip=0.3cm]{frametitle}
+        \usebeamerfont{frametitle}\insertframetitle
+    \end{beamercolorbox}%
+}
+
+% Маркеры списков
+\setbeamertemplate{itemize item}{\textbullet}
+\setbeamertemplate{itemize subitem}{--}
+
+% Титульный слайд — тёмный фон
+\setbeamertemplate{title page}{%
+  \begin{tikzpicture}[remember picture, overlay]
+    \fill[mipt-blue] (current page.south west) rectangle (current page.north east);
+  \end{tikzpicture}%
+  \vbox{}
+  \vfill
+  \begin{beamercolorbox}[sep=12pt, center]{title}
+    \usebeamerfont{title}\inserttitle\par
+    \ifx\insertsubtitle\@empty\else
+      \vskip 8pt
+      {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}
+    \fi
+  \end{beamercolorbox}%
+  \vskip 16pt
+  \begin{beamercolorbox}[sep=6pt, center]{author}
+    \usebeamerfont{author}\insertauthor
+  \end{beamercolorbox}
+  \begin{beamercolorbox}[sep=4pt, center]{institute}
+    \usebeamerfont{institute}\insertinstitute
+  \end{beamercolorbox}
+  \begin{beamercolorbox}[sep=4pt, center]{date}
+    \usebeamerfont{date}\insertdate
+  \end{beamercolorbox}
+  \vfill
+}
+
+\usepackage{tikz}   % нужен для титульного слайда

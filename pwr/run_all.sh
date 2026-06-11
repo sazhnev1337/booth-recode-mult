@@ -30,15 +30,6 @@ EOF
 
 echo "=== Analyzing power ==="
 
-# naive: 4 сценария.
-for scn in $SCENARIOS; do
-    cfg="naive_${scn}"
-    echo "  $cfg"
-    run_sta "$cfg" "mult_naive" "tb_mult_naive" \
-        "../sim/waves/power_naive_${scn}.vcd" \
-        "reports/power_${cfg}.rpt"
-done
-
 # booth: 4 сценария.
 for scn in $SCENARIOS; do
     cfg="booth_${scn}"
@@ -68,14 +59,6 @@ echo "=== Summary ==="
 printf "%-25s" "config"
 for scn in $SCENARIOS; do
     printf " %14s" "$scn"
-done
-echo ""
-
-# naive строка
-printf "%-25s" "naive"
-for scn in $SCENARIOS; do
-    val=$(get_total "reports/power_naive_${scn}.rpt")
-    printf " %14s" "$val"
 done
 echo ""
 

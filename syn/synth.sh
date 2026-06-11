@@ -44,6 +44,8 @@ hierarchy -check -top ${TOP}
 
 proc
 opt -full
+# alumacc
+# maccmap
 techmap
 opt -fast
 flatten

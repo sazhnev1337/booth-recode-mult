@@ -1,0 +1,65 @@
+
+17. Printing statistics.
+
+=== mult_booth ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+      918        - wires
+     1010        - wire bits
+        6        - public wires
+       98        - public wire bits
+        5        - ports
+       66        - port bits
+      976   65.581 cells
+        6        -   A2O1A1Ixp33_ASAP7_75t_R
+       19        -   A2O1A1O1Ixp25_ASAP7_75t_R
+       37    3.237   AND2x2_ASAP7_75t_R
+        7    0.612   AND3x1_ASAP7_75t_R
+        2    0.233   AND5x1_ASAP7_75t_R
+        1        -   AO211x2_ASAP7_75t_R
+        3        -   AO21x1_ASAP7_75t_R
+        2        -   AOI211xp5_ASAP7_75t_R
+       29        -   AOI21xp33_ASAP7_75t_R
+       12        -   AOI22xp33_ASAP7_75t_R
+       64        -   DFFASRHQNx1_ASAP7_75t_R
+       77        -   INVx1_ASAP7_75t_R
+       42    4.287   MAJIxp5_ASAP7_75t_R
+        9    1.181   MAJx2_ASAP7_75t_R
+       32    1.866   NAND2xp33_ASAP7_75t_R
+        6    0.437   NAND3xp33_ASAP7_75t_R
+       80    4.666   NOR2xp33_ASAP7_75t_R
+       10    0.729   NOR3xp33_ASAP7_75t_R
+       18        -   O2A1O1Ixp33_ASAP7_75t_R
+        7        -   OA211x2_ASAP7_75t_R
+        3        -   OA21x2_ASAP7_75t_R
+        4        -   OAI211xp5_ASAP7_75t_R
+       25        -   OAI21xp33_ASAP7_75t_R
+        1        -   OAI221xp5_ASAP7_75t_R
+      105        -   OAI22xp33_ASAP7_75t_R
+       14    1.225   OR2x2_ASAP7_75t_R
+        6    0.525   OR3x1_ASAP7_75t_R
+      256   33.592   XNOR2xp5_ASAP7_75t_R
+       99   12.991   XOR2xp5_ASAP7_75t_R
+
+   Area for cell type \AO211x2_ASAP7_75t_R is unknown!
+   Area for cell type \AO21x1_ASAP7_75t_R is unknown!
+   Area for cell type \AOI211xp5_ASAP7_75t_R is unknown!
+   Area for cell type \OA21x2_ASAP7_75t_R is unknown!
+   Area for cell type \OA211x2_ASAP7_75t_R is unknown!
+   Area for cell type \OAI221xp5_ASAP7_75t_R is unknown!
+   Area for cell type \A2O1A1O1Ixp25_ASAP7_75t_R is unknown!
+   Area for cell type \A2O1A1Ixp33_ASAP7_75t_R is unknown!
+   Area for cell type \AOI22xp33_ASAP7_75t_R is unknown!
+   Area for cell type \OAI211xp5_ASAP7_75t_R is unknown!
+   Area for cell type \O2A1O1Ixp33_ASAP7_75t_R is unknown!
+   Area for cell type \AOI21xp33_ASAP7_75t_R is unknown!
+   Area for cell type \OAI22xp33_ASAP7_75t_R is unknown!
+   Area for cell type \OAI21xp33_ASAP7_75t_R is unknown!
+   Area for cell type \INVx1_ASAP7_75t_R is unknown!
+   Area for cell type \DFFASRHQNx1_ASAP7_75t_R is unknown!
+
+   Chip area for module '\mult_booth': 65.580840
+     of which used for sequential elements: 0.000000 (0.00%)
+

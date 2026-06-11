@@ -3,60 +3,40 @@ set -e
 
 mkdir -p vvp waves
 
-# Конфигурации с их источниками RTL.
-# Для каждой пары (cfg, mode) запускаем симуляцию с соответствующим stimulus.
-# naive и booth работают только с режимом 'standard' (recoded-колонка игнорируется).
-# booth_extrec работает со всеми режимами recoding.
-
 SCENARIOS="uniform_fast uniform_slow gauss_fast gauss_slow"
 EXTREC_MODES="standard exact approx_1 approx_2"
+
+# Все сценарии: N=20000 (fast period=1, slow period=10)
+n_for_scenario() {
+    echo 20000
+}
 
 # Сначала компилируем все тестбенчи один раз.
 echo "=== Compiling testbenches ==="
 
-if [ ! -f vvp/sim_naive.vvp ]; then
-    iverilog -o vvp/sim_naive.vvp \
-        tb/tb_mult_naive.v \
-        ../syn/netlists/mult_naive.v \
-        ../syn/lib/NangateOpenCellLibrary.v
-    echo "  naive: compiled"
-fi
+iverilog -o vvp/sim_booth.vvp \
+    tb/tb_mult_booth.v \
+    ../syn/netlists/mult_booth.v \
+    ../syn/lib/NangateOpenCellLibrary.v
+echo "  booth: compiled"
 
-if [ ! -f vvp/sim_booth.vvp ]; then
-    iverilog -o vvp/sim_booth.vvp \
-        tb/tb_mult_booth.v \
-        ../syn/netlists/mult_booth.v \
-        ../syn/lib/NangateOpenCellLibrary.v
-    echo "  booth: compiled"
-fi
-
-if [ ! -f vvp/sim_booth_extrec.vvp ]; then
-    iverilog -o vvp/sim_booth_extrec.vvp \
-        tb/tb_mult_booth_extrec.v \
-        ../syn/netlists/mult_booth_extrec.v \
-        ../syn/lib/NangateOpenCellLibrary.v
-    echo "  booth_extrec: compiled"
-fi
+iverilog -o vvp/sim_booth_extrec.vvp \
+    tb/tb_mult_booth_extrec.v \
+    ../syn/netlists/mult_booth_extrec.v \
+    ../syn/lib/NangateOpenCellLibrary.v
+echo "  booth_extrec: compiled"
 
 # Теперь прогоны.
 echo ""
 echo "=== Running simulations ==="
 
-# naive: 4 сценария
-for scn in $SCENARIOS; do
-    stim="data/stim_${scn}_standard.txt"
-    out="waves/power_naive_${scn}.vcd"
-    echo "naive / $scn"
-    vvp vvp/sim_naive.vvp +STIM=$stim > /dev/null
-    mv waves/power.vcd $out
-done
-
 # booth: 4 сценария
 for scn in $SCENARIOS; do
     stim="data/stim_${scn}_standard.txt"
     out="waves/power_booth_${scn}.vcd"
-    echo "booth / $scn"
-    vvp vvp/sim_booth.vvp +STIM=$stim > /dev/null
+    n=$(n_for_scenario $scn)
+    echo "booth / $scn (N=$n)"
+    vvp vvp/sim_booth.vvp +STIM=$stim +N=$n > /dev/null
     mv waves/power.vcd $out
 done
 
@@ -65,8 +45,9 @@ for scn in $SCENARIOS; do
     for mode in $EXTREC_MODES; do
         stim="data/stim_${scn}_${mode}.txt"
         out="waves/power_booth_extrec_${scn}_${mode}.vcd"
-        echo "booth_extrec / $scn / $mode"
-        vvp vvp/sim_booth_extrec.vvp +STIM=$stim > /dev/null
+        n=$(n_for_scenario $scn)
+        echo "booth_extrec / $scn / $mode (N=$n)"
+        vvp vvp/sim_booth_extrec.vvp +STIM=$stim +N=$n > /dev/null
         mv waves/power.vcd $out
     done
 done

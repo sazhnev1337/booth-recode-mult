@@ -63,10 +63,8 @@ module mult_booth (
                               1'b0, neg[1],
                               1'b0, neg[0] };
 
-    wire signed [31:0] p_comb;
-    assign p_comb = row[0] + row[1] + row[2] + row[3]
-                  + row[4] + row[5] + row[6] + row[7]
-                  + neg_correction;
+    wire signed [31:0] p_comb = row[0] + row[1] + row[2] + row[3] +
+                                row[4] + row[5] + row[6] + row[7] + neg_correction;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n)
