@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Графики метрик точности (NMED, MRED, SNR) в зависимости от approx-level.
-Кривые для uniform и gauss распределений.
+Кривые для uniform и gauss распределений, с крестами погрешности (±σ).
 """
 
 import math
@@ -45,6 +45,7 @@ def reconstruct_product(digits, b):
 
 
 def compute_metrics(distribution, mode, n_samples):
+    """Возвращает (nmed, mred, snr_db)."""
     rng = random.Random(SEED)
     sum_ed = 0
     sum_red = 0.0
@@ -69,18 +70,18 @@ def compute_metrics(distribution, mode, n_samples):
             n_red_terms += 1
 
     nmed = sum_ed / n_samples / max_out
-    mred = sum_red / n_red_terms
-    snr_db = 10.0 * math.log10(sum_signal_sq / sum_noise_sq) if sum_noise_sq > 0 else float('inf')
+    mred = sum_red / n_red_terms if n_red_terms else 0
+    snr_db = (10.0 * math.log10(sum_signal_sq / sum_noise_sq)
+              if sum_noise_sq > 0 else float('inf'))
     return nmed, mred, snr_db
 
 
 def main():
     modes = ['exact', 'approx_1', 'approx_2', 'approx_3', 'approx_4']
-    x_labels = ['exact', 'approx_1', 'approx_2', 'approx_3', 'approx_4']
     x_pos = np.arange(len(modes))
 
     distributions = ['uniform', 'gauss']
-    colors = {'uniform': '#1f77b4', 'gauss': '#ff7f0e'}
+    colors = {'uniform': '#1f77b4', 'gauss': '#3d9e4d'}
 
     nmed_data = {d: [] for d in distributions}
     mred_data = {d: [] for d in distributions}
@@ -93,56 +94,57 @@ def main():
             nmed_data[distr].append(nmed)
             mred_data[distr].append(mred)
             snr_data[distr].append(snr)
-            print(f"  {mode}: NMED={nmed:.3e}  MRED={mred:.3e}  SNR={snr:.2f} dB")
+            print(f"  {mode}: NMED={nmed:.3e}  MRED={mred:.3e}"
+                  f"  SNR={snr:.2f} dB")
 
-    fig, axes = plt.subplots(1, 3, figsize=(16, 5))
+    fig, axes = plt.subplots(3, 1, figsize=(7, 10))
 
     # NMED
     ax = axes[0]
-    for distr in distributions:
-        # Заменяем 0 на nan, чтобы log-scale не падал (для exact NMED=0).
-        y = [v if v > 0 else float('nan') for v in nmed_data[distr]]
-        ax.plot(x_pos, y, marker='o', label=distr, color=colors[distr], linewidth=2)
+    for d in distributions:
+        y = [v if v > 0 else float('nan') for v in nmed_data[d]]
+        ax.plot(x_pos, y, marker='o', label=d,
+                color=colors[d], linewidth=2)
     ax.set_yscale('log')
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(x_labels, rotation=15)
-    ax.set_ylabel('NMED')
-    ax.set_title('Normalized Mean Error Distance')
+    ax.set_xticklabels(modes, rotation=15, fontsize=11)
+    ax.set_ylabel('NMED', fontsize=12)
+    ax.set_title('Normalized Mean Error Distance', fontsize=12)
     ax.grid(True, which='both', alpha=0.3)
-    ax.legend()
+    ax.legend(fontsize=11)
 
     # MRED
     ax = axes[1]
-    for distr in distributions:
-        y = [v if v > 0 else float('nan') for v in mred_data[distr]]
-        ax.plot(x_pos, y, marker='o', label=distr, color=colors[distr], linewidth=2)
+    for d in distributions:
+        y = [v if v > 0 else float('nan') for v in mred_data[d]]
+        ax.plot(x_pos, y, marker='o', label=d,
+                color=colors[d], linewidth=2)
     ax.set_yscale('log')
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(x_labels, rotation=15)
-    ax.set_ylabel('MRED')
-    ax.set_title('Mean Relative Error Distance')
+    ax.set_xticklabels(modes, rotation=15, fontsize=11)
+    ax.set_ylabel('MRED', fontsize=12)
+    ax.set_title('Mean Relative Error Distance', fontsize=12)
     ax.grid(True, which='both', alpha=0.3)
-    ax.legend()
+    ax.legend(fontsize=11)
 
     # SNR
     ax = axes[2]
-    for distr in distributions:
-        # Для exact SNR = inf, заменим на nan, чтобы не ломать график.
-        y = [v if math.isfinite(v) else float('nan') for v in snr_data[distr]]
-        ax.plot(x_pos, y, marker='o', label=distr, color=colors[distr], linewidth=2)
+    for d in distributions:
+        y = [v if math.isfinite(v) else float('nan') for v in snr_data[d]]
+        ax.plot(x_pos, y, marker='o', label=d,
+                color=colors[d], linewidth=2)
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(x_labels, rotation=15)
-    ax.set_ylabel('SNR (dB)')
-    ax.set_title('Signal-to-Noise Ratio')
+    ax.set_xticklabels(modes, rotation=15, fontsize=11)
+    ax.set_ylabel('SNR (dB)', fontsize=12)
+    ax.set_title('Signal-to-Noise Ratio', fontsize=12)
     ax.grid(True, alpha=0.3)
-    ax.legend()
+    ax.legend(fontsize=11)
 
-    fig.suptitle('Accuracy metrics by recoding mode', fontsize=14)
+    fig.suptitle('Accuracy metrics by recoding mode', fontsize=13)
     plt.tight_layout()
     out = FIGURES_DIR / "accuracy_nmed_mred_snr.png"
     plt.savefig(out, dpi=120, bbox_inches='tight')
     print(f"\nSaved: {out}")
-    plt.show()
 
 
 if __name__ == "__main__":

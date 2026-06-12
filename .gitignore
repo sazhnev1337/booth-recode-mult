@@ -2,6 +2,7 @@ sim/waves/
 syn/_gen/
 pwr/_gen/
 sim/vvp/
+sim/data/
 doc/notes.txt
 py/.venv
 doc/results/*
@@ -11,3 +12,20 @@ doc/presentation/
 !doc/presentation/presentation.tex
 !doc/presentation/preamble.tex
 .claude/
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.xdv
+*.nav
+*.snm
+*.toc
+*.out
+texput.log
+
+# Python cache
+__pycache__/
+*.pyc

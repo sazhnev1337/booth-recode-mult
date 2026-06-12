@@ -11,7 +11,8 @@
 % ============================================================
 \title{Энергоэффективный умножитель Бута\\с вынесенной перекодировкой\\для адаптивных цифровых фильтров}
 \subtitle{Выпускная квалификационная работа бакалавра}
-\author{Сажнев М.\,Е.}
+\author{Сажнев М.\,Е.\\[4pt]
+  {\small Научный руководитель: Соловьев Д.\,М.}}
 \institute{Московский физико-технический институт}
 \date{МФТИ, 2026}
 
@@ -46,20 +47,19 @@
 % ── СЛАЙД 3: Цель и задачи ──────────────────────────────────
 \begin{frame}{Цель и задачи}
   \textbf{Цель работы:} снизить энергопотребление умножителя Бута
-  в адаптивном цифровом фильтре за счёт перекодировки с пропуском
-  нулевых кодов.
+  в адаптивном цифровом фильтре, применив методы перекодировки
+  с добавлением нулевых кодов.
 
   \vskip 12pt
   \textbf{Задачи:}
   \begin{enumerate}
-    \item Адаптировать алгоритм recoding (Университет Бэйхан~\cite{zhu2025})
+    \item Адаптировать алгоритм перекодировки~\cite{zhu2025}
           к \textbf{параллельной} архитектуре умножителя
-    \item Предложить архитектуру с \alert{вынесенным наружу} перекодировщиком
-          (амортизация по тапам фильтра)
-    \item Реализовать на Verilog три варианта: \texttt{naive}, \texttt{booth},
-          \texttt{booth\_extrec}
+    \item Предложить архитектурное решение, реализующее преимущества
+          перекодировки в сценарии \textbf{адаптивного фильтра}
+    \item Реализовать предложенную архитектуру на Verilog
     \item Построить методику измерения площади и мощности
-          (открытый маршрут синтеза, 45\,нм)
+          на \textbf{общедоступных} инструментах (45\,нм)
     \item Оценить точность приближённых режимов (NMED, MRED, SNR)
           на статистике $10^6$ пар
   \end{enumerate}
@@ -76,7 +76,7 @@
       \textbf{Принцип radix-4 Booth:}
       \begin{itemize}
         \item Множитель — перекрывающиеся группы по 3 бита
-        \item Каждая группа $\to$ код из набора $\{\bar 2,\bar 1,0,1,2\}$
+        \item Каждая группа $\to$ код из набора $\{\bar 2,\bar 1,0,1,2\}$ 3 бита: (One, Two, Neg)
         \item \textbf{Вдвое меньше} частичных произведений
       \end{itemize}
 
@@ -92,7 +92,7 @@
       % блок коэффициентов w[k] (обновляются редко),
       % умножители на каждом тапе, сумматор.
       \centering
-      \includegraphics[width=\textwidth]{zaglushka.pdf}
+      \includegraphics[width=0.8\textwidth]{booth_mult.pdf}
   \end{columns}
 \end{frame}
 
@@ -123,52 +123,75 @@
       % Показать: слева обычный Booth (все строки заполнены),
       % справа после recoding — часть строк зануляется (пустые точки).
       \centering
-      \includegraphics[width=\textwidth]{zaglushka.pdf}
+      \includegraphics[width=\textwidth]{recoding.pdf}
       \\[2pt]
-      {\footnotesize Зануление строк в матрице частичных произведений}
+      {\footnotesize }
   \end{columns}
 \end{frame}
 
 % ── СЛАЙД 6: Проблема прямого переноса ──────────────────────
-\begin{frame}{Проблема прямого переноса в параллельную схему}
+\begin{frame}[shrink=10]{Проблема: последовательный умножитель в конвейере}
   \begin{columns}[T]
-    \column{0.52\textwidth}
+    \column{0.54\textwidth}
       В оригинале — \textbf{последовательный} умножитель:
-      перекодировщик работает по одному такту на код,
-      экономия — от \alert{пропуска тактов}.
+      нулевые коды \alert{пропускаются}, число тактов переменно.
 
-      \vskip 8pt
-      В параллельной схеме пропускать такты нечего —
-      все частичные произведения формируются \textbf{одновременно}.
-      Перекодировщик пришлось бы ставить в \alert{каждую строку}:
+      \vskip 5pt
+      FIR-фильтр требует результата \textbf{каждый такт}
+      $\Rightarrow$ нужен контроллер готовности:
 
       \begin{itemize}
-        \item рост площади и задержки
-        \item накладные расходы съедают выигрыш от занулений
-        \item арбитраж между строками усложняет схему
+        \item добавляет площадь и динамическую мощность
+        \item накладные расходы \textbf{перекрывают} выигрыш
+        \item реальный DSP требует \textbf{фиксированной}
+              пропускной способности
       \end{itemize}
 
       \vskip 4pt
       \begin{block}{Вывод}
-        Нужен другой способ «встроить» перекодировку в параллельный
-        умножитель.
+        Необходим параллельный умножитель с \textbf{фиксированной
+        однотактной} задержкой.
       \end{block}
 
-    \column{0.46\textwidth}
-      % РИСУНОК: параллельный умножитель с перекодировщиком
-      % в КАЖДОЙ строке PP (подсветить дублирование recoder'ов
-      % красным — mipt-accent). Подпись "наивный перенос".
+    \column{0.44\textwidth}
       \centering
-      \includegraphics[width=\textwidth]{zaglushka.pdf}
-      \\[2pt]
-      {\footnotesize Перекодировщик дублируется в каждой строке}
+      \vskip 40pt
+      \includegraphics[width=\textwidth]{problem.pdf}
   \end{columns}
 \end{frame}
 
-% ── СЛАЙД 7: Предлагаемая архитектура (главный слайд) ────────
+% ── СЛАЙД 7: Проблема: перекодировка внутри умножителя ───────
+\begin{frame}{Проблема: перекодировка внутри умножителя}
+  \begin{columns}[T]
+    \column{0.48\textwidth}
+      Алгоритм перекодировки обрабатывает пары кодов Бута
+      \alert{последовательно}, слева направо:
+
+      \vskip 8pt
+      \begin{itemize}
+        \item Пары \textbf{перекрываются} $\Rightarrow$ каждая зависит
+              от предыдущей $\Rightarrow$ \textbf{нельзя распараллелить}
+        \item Перекодировщик — дополнительная комбинационная логика
+              \textbf{внутри} умножителя $\Rightarrow$ сам потребляет энергию
+      \end{itemize}
+
+      \vskip 10pt
+      Простое добавление перекодировки в параллельный умножитель
+      делает модуль \textbf{только хуже}.
+
+    \column{0.50\textwidth}
+      \centering
+      \vskip 20pt
+      % РИСУНОК: схема — перекодировщик внутри умножителя,
+      % показать последовательную цепочку зависимых пар.
+        \includegraphics[width=\textwidth]{sequential.pdf}%
+  \end{columns}
+\end{frame}
+
+% ── СЛАЙД 8: Предлагаемая архитектура (главный слайд) ────────
 \begin{frame}{Предлагаемая архитектура: вынесенная перекодировка}
   \begin{columns}[T]
-    \column{0.46\textwidth}
+    \column{0.44\textwidth}
       \textbf{Ключевая идея:} перекодировщик вынесен \alert{наружу}
       умножителя.
 
@@ -183,50 +206,247 @@
               (точный / приближённые)
       \end{itemize}
 
-    \column{0.52\textwidth}
+    \column{0.56\textwidth}
       % РИСУНОК (ГЛАВНЫЙ): две схемы.
       % Сверху — baseline: recoder ВНУТРИ умножителя.
       % Снизу — предлагаемая: recoder СНАРУЖИ (в блоке обновления
       % коэффициента), в умножитель идёт recoded-вектор.
       % Выделить вынесенный recoder цветом mipt-accent.
       \centering
-      \includegraphics[width=\textwidth]{zaglushka.pdf}
+      \includegraphics[width=\textwidth]{extrec.pdf}
       \\[2pt]
-      {\footnotesize Сверху — базовая схема, снизу — с вынесенной
+      {\footnotesize Слева — базовая схема, справа — с вынесенной
       перекодировкой}
   \end{columns}
 \end{frame}
 
-% ── СЛАЙД 8: Реализация ─────────────────────────────────────
+% ── СЛАЙД 9: Реализация ─────────────────────────────────────
 \begin{frame}{Реализация}
+  \textbf{Два RTL-модуля (Verilog):}
+  \begin{itemize}
+    \item \texttt{mult\_booth} — \textbf{исходный}: radix-4 Booth,
+          перекодировщик \textbf{внутри} (эталон для сравнения)
+    \item \texttt{mult\_booth\_extrec} — \textbf{предлагаемый}: принимает
+          \textbf{готовый} 24-битный вектор, перекодировщика нет
+  \end{itemize}
+  \vskip 10pt
+  \textbf{Перекодировщик — на Python:}
+  \begin{itemize}
+    \item последовательный алгоритм, обрабатывает все 7 пар кодов Бута
+    \item генерирует вектор \texttt{\{two, one, neg\}} для умножителя
+    \item \textbf{exact} — точный: нулевая ошибка, только 2 паттерна
+    \item \textbf{approx\_1..4} — приближённые: каждый следующий уровень
+          добавляет паттерны с $\mathrm{ED}{=}\pm1$, агрессивность растёт
+  \end{itemize}
+\end{frame}
+
+
+% ── СЛАЙД 9: Методика измерений ─────────────────────────────
+\begin{frame}{Методика измерений}
   \begin{columns}[T]
-    \column{0.50\textwidth}
-      \textbf{Три RTL-модуля (Verilog):}
-      \begin{itemize}
-        \item \texttt{mult\_naive} — прямое \texttt{a*b} (опорная точка)
-        \item \texttt{mult\_booth} — radix-4 Booth, перекодировщик
-              \textbf{внутри}
-        \item \texttt{mult\_booth\_extrec} — приём \textbf{готового}
-              24-битного вектора
-      \end{itemize}
-
+    \column{0.60\textwidth}
+      \textbf{Маршрут синтеза и анализа:}
+      \begin{enumerate}
+        \item Python recoder $\to$ stimulus-файлы $(a,\,b,\,\text{recoded})$
+        \item RTL $\xrightarrow{\text{Yosys}}$ нетлист (NanGate45, 45\,нм)
+        \item Нетлист $\xrightarrow{\text{Icarus Verilog}}$ \texttt{power.vcd}
+        \item \texttt{power.vcd} $\xrightarrow{\text{OpenSTA}}$ отчёт мощности
+      \end{enumerate}
       \vskip 8pt
-      \textbf{Перекодировщик — на Python:}
+      \textbf{Тестовые сценарии:}
       \begin{itemize}
-        \item последовательный алгоритм, все 7 паттернов
-        \item генерирует вектор \texttt{\{two, one, neg\}}
-        \item режимы: \texttt{exact}, \texttt{approx\_1..4}
+        \item Распределение: равномерное, гауссово ($\sigma{=}8000$)
+        \item Период обновления $a$: fast ($T{=}1$), slow ($T{=}10$ тактов)
+        \item $N{=}20\,000$ умножений; технология NanGate45
       \end{itemize}
 
-    \column{0.50\textwidth}
-      % РИСУНОК: иерархия модулей / data flow.
-      % Python recoder --(24-bit recoded)--> регистр коэффициента
-      % --> mult_booth_extrec. Рядом для контраста mult_booth
-      % с внутренним encoder'ом.
+    \column{0.38\textwidth}
       \centering
-      \includegraphics[width=\textwidth]{zaglushka.pdf}
+      \begin{tikzpicture}[node distance=0.45cm,
+          box/.style={draw, rounded corners=3pt, fill=mipt-light,
+                      minimum width=2.7cm, minimum height=0.52cm,
+                      align=center, font=\footnotesize},
+          arr/.style={-{Stealth}, thick, color=mipt-blue}]
+        \node[box]                    (rtl)     {RTL (Verilog)};
+        \node[box, below=of rtl]      (yosys)   {Yosys synth};
+        \node[box, below=of yosys]    (netlist) {Нетлист};
+        \node[box, below=of netlist]  (icarus)  {Icarus Verilog};
+        \node[box, below=of icarus]   (vcd)     {power.vcd};
+        \node[box, below=of vcd]      (sta)     {OpenSTA};
+        \node[box, below=of sta, fill=green!20] (pwr) {\textbf{Отчёт мощности}};
+        \draw[arr] (rtl) -- (yosys);
+        \draw[arr] (yosys) -- (netlist);
+        \draw[arr] (netlist) -- (icarus);
+        \draw[arr] (icarus) -- (vcd);
+        \draw[arr] (vcd) -- (sta);
+        \draw[arr] (sta) -- (pwr);
+      \end{tikzpicture}
   \end{columns}
 \end{frame}
 
+% ── СЛАЙД 10: Площадь ───────────────────────────────────────
+\begin{frame}{Результаты: площадь}
+  \centering
+  \renewcommand{\arraystretch}{1.4}
+  \begin{tabular}{lr}
+    \toprule
+    Модуль & Площадь, мкм² \\
+    \midrule
+    \texttt{mult\_booth}         & 1523 \\
+    \texttt{mult\_booth\_extrec} & 1518 \\
+    \bottomrule
+  \end{tabular}
+
+  \vskip 14pt
+  \begin{block}{Два компенсирующих фактора}
+    \textbf{$-$} Из умножителя убрана вся логика кодирования Бута
+    (вычисление \texttt{neg}, \texttt{one}, \texttt{two} из коэффициента)\\[4pt]
+    \textbf{$+$} Входной регистр коэффициента расширен:
+    16 бит $\to$ 24 бита (перекодированный вектор)\\[4pt]
+    Два эффекта взаимно компенсируются $\Rightarrow$
+    площадь \textbf{практически не меняется}
+  \end{block}
+\end{frame}
+
+% ── СЛАЙД 11: Мощность ──────────────────────────────────────
+\begin{frame}{Результаты: мощность}
+  \begin{columns}[T]
+    \column{0.56\textwidth}
+      \textbf{Сценарий gauss\_slow} (самый реалистичный):
+      \vskip 4pt
+      \small\renewcommand{\arraystretch}{1.25}
+      \begin{tabular}{lrr}
+        \toprule
+        Конфигурация & Мощность, мкВт & Экономия \\
+        \midrule
+        booth (базовый)  & 245              & ---       \\
+        extrec exact     & 244              & $+0.4\%$  \\
+        extrec approx\_1 & 241              & $+1.6\%$  \\
+        extrec approx\_2 & \textbf{238}     & \alert{$+2.9\%$} \\
+        \bottomrule
+      \end{tabular}
+
+      \vskip 8pt
+      \begin{block}{Почему gauss/slow}
+        \footnotesize
+        \textbf{Slow:} коэффициент стабилен дольше, перекодировка
+        амортизируется на большем числе тактов\\[3pt]
+        \textbf{Gauss:} реалистичный сценарий — речевой и аудиосигнал
+        гауссово распределён; абсолютная экономия одинакова для обоих
+        распределений ($\approx 7$\,мкВт)
+      \end{block}
+
+    \column{0.46\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{power_dut_comparison_gauss_slow.png}
+  \end{columns}
+\end{frame}
+
+% ── СЛАЙД 12: Точность ──────────────────────────────────────
+\begin{frame}{Результаты: точность}
+  \begin{columns}[T]
+    \column{0.45\textwidth}
+      \renewcommand{\arraystretch}{1.3}
+      \begin{tabular}{lrr}
+        \toprule
+        Режим & NMED & SNR, дБ \\
+        \midrule
+        exact     & $0$                   & $\infty$ \\
+        approx\_1 & $1.3{\cdot}10^{-6}$   & 76.7     \\
+        approx\_2 & $2.2{\cdot}10^{-5}$   & 52.3     \\
+        approx\_3 & $3.5{\cdot}10^{-4}$   & 28.1     \\
+        approx\_4 & $1.5{\cdot}10^{-3}$   & 15.6     \\
+        \bottomrule
+      \end{tabular}
+      \newline
+      {\footnotesize $10^6$ пар, гауссово распределение}
+
+      \vskip 4pt
+      \begin{block}{Важное свойство}
+        Систематическое смещение $\approx 0$:\\
+        ED $= +1$ и $-1$ симметричны по конструкции
+      \end{block}
+
+    \column{0.55\textwidth}
+      \centering
+      \includegraphics[height=0.82\textheight]{accuracy_nmed_mred_snr.png}
+  \end{columns}
+\end{frame}
+
+% ── СЛАЙД 13: Компромисс мощность / точность ────────────────
+\begin{frame}{Компромисс: мощность vs точность}
+  \centering\small
+  \renewcommand{\arraystretch}{1.4}
+  \begin{tabular}{lcc}
+    \toprule
+    Режим & Экономия мощн. & SNR (гаусс) \\
+    \midrule
+    standard  & $-1.6\%$          & $\infty$    \\
+    exact     & $+0.4\%$          & $\infty$    \\
+    approx\_1 & $+1.6\%$          & 76.7\,дБ   \\
+    approx\_2 & \alert{$+2.9\%$}  & 52.3\,дБ   \\
+    \bottomrule
+  \end{tabular}
+
+  \vskip 10pt
+  \begin{block}{Оценка approx\_2 для практики}
+    SNR = 52\,дБ $\gg$ 40\,дБ  ---
+    безопасен для многих DSP-приложений.
+    Смещение $\approx 0$ исключает накопление ошибки.
+  \end{block}
+\end{frame}
+
+% ── СЛАЙД 15: Заключение ────────────────────────────────────
+\begin{frame}{Заключение}
+  \begin{itemize}
+    \item Вынесенный рекодер: \textbf{$-2.9\%$ мощности}
+          (gauss\_slow, approx\_2)
+    \item Площадь умножителя \textbf{не возрастает} — два эффекта
+          компенсируют друг друга
+    \item Единый RTL для всех режимов точности
+    \item approx\_2: SNR $= 52\,$дБ, смещение $\approx 0$ —
+          пригоден для большинства DSP-задач
+  \end{itemize}
+
+  \vskip 10pt
+  \begin{block}{Главный результат}
+    Перекодировщик вынесен наружу и \textbf{усложнён} методом
+    дополнительной перекодировкой: он создаёт нулевые
+    частичные произведения до того, как данные попадают
+    в умножитель. Сам умножитель при этом \textbf{упрощается}
+    — его площадь не растёт, а мощность снижается.
+  \end{block}
+\end{frame}
+
+% ── СЛАЙД 16: Спасибо ───────────────────────────────────────
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture, overlay]
+    \fill[mipt-blue] (current page.south west) rectangle (current page.north east);
+  \end{tikzpicture}
+  \vspace{2.5cm}
+  \begin{center}
+    {\Large\color{white}\textbf{Спасибо за внимание}}\\[12pt]
+    {\color{mipt-light}Сажнев М.\,Е. \quad МФТИ, 2026}
+  \end{center}
+  \vspace{1.2cm}
+  \begin{center}
+    {\footnotesize\color{mipt-light}
+    \textbf{Использованная литература:}\\[4pt]
+    [1] Zhu~M. et al. Power-efficient approximate Booth multiplier with\\
+    zero-skipping recoding.
+    \textit{Microelectronics Journal}, 2025.}
+  \end{center}
+\end{frame}
+
+% ── Скрытый слайд: список литературы ────────────────────────
+\begin{frame}[allowframebreaks]{Список источников}
+  \begin{thebibliography}{9}
+    \bibitem{zhu2025}
+      Zhu~M., Li~H., Song~Y. et al.
+      Power-efficient approximate Booth multiplier using zero-skipping recoding.
+      \textit{Microelectronics Journal}, 2025.
+      DOI:~10.1016/j.mejo.2025.106394
+  \end{thebibliography}
+\end{frame}
 
 \end{document}

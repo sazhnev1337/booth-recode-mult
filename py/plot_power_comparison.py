@@ -31,20 +31,18 @@ def read_power(rpt_path):
 
 def get_all_data():
     """Читает все мощности из reports/, возвращает dict[config][scenario] -> µW."""
-    scenarios = ['uniform_fast', 'uniform_slow','uniform_very_slow', 'gauss_fast', 'gauss_slow', 'gauss_very_slow']
+    scenarios = ['uniform_fast', 'uniform_slow', 'gauss_fast', 'gauss_slow']
     extrec_modes = ['standard', 'exact', 'approx_1', 'approx_2']
     data = {}
 
     for scn in scenarios:
-        #  booth 
-        data.setdefault('booth', {})[scn] = read_power(REPORTS_DIR / f"power_booth_{scn}.rpt") * 1e6
+        v = read_power(REPORTS_DIR / f"power_booth_{scn}.rpt")
+        data.setdefault('booth', {})[scn] = v * 1e6 if v is not None else None
 
-        # booth_extrec — по файлу на каждый режим.
         for mode in extrec_modes:
             cfg = f"booth_extrec_{mode}"
-            data.setdefault(cfg, {})[scn] = read_power(
-                REPORTS_DIR / f"power_booth_extrec_{scn}_{mode}.rpt"
-            ) * 1e6
+            v = read_power(REPORTS_DIR / f"power_booth_extrec_{scn}_{mode}.rpt")
+            data.setdefault(cfg, {})[scn] = v * 1e6 if v is not None else None
 
     return data
 
@@ -58,14 +56,14 @@ def plot_main_comparison(data):
                    'booth_extrec\nstandard', 'booth_extrec\nexact',
                    'booth_extrec\napprox_1', 'booth_extrec\napprox_2']
 
-    values = [data[cfg]['gauss_very_slow'] for cfg in configs]
+    values = [data[cfg]['gauss_slow'] for cfg in configs]
 
     colors = ['#888888', '#3b82f6',
               '#10b981', '#10b981', '#ef4444', '#ef4444']
     # Чуть варьируем оттенки для extrec.
     alphas = [1.0, 1.0, 0.6, 1.0, 0.6, 1.0]
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(10, 10))
     bars = ax.bar(np.arange(len(configs)), values, color=colors, alpha=None,
                   edgecolor='black', linewidth=0.5)
     for bar, alpha in zip(bars, alphas):
@@ -73,12 +71,13 @@ def plot_main_comparison(data):
 
     # Подписи значений над столбиками.
     for i, v in enumerate(values):
-        ax.text(i, v + 5, f'{v:.0f}', ha='center', va='bottom', fontsize=10)
+        ax.text(i, v + 5, f'{v:.0f}', ha='center', va='bottom', fontsize=13)
 
     ax.set_xticks(np.arange(len(configs)))
-    ax.set_xticklabels(short_names, fontsize=9)
-    ax.set_ylabel('Power, µW')
-    ax.set_title('Power consumption (gauss_slow scenario, realistic for adaptive filter)')
+    ax.set_xticklabels(short_names, fontsize=13)
+    ax.set_ylabel('Power, µW', fontsize=14)
+    ax.set_title('Power consumption (gauss_slow scenario, realistic for adaptive filter)', fontsize=14)
+    ax.tick_params(axis='y', labelsize=13)
     ax.set_ylim(0, max(values) * 1.15)
     ax.grid(axis='y', alpha=0.3)
 
@@ -86,7 +85,7 @@ def plot_main_comparison(data):
     ax.axhline(y=data['booth']['gauss_slow'], color='#3b82f6',
                linestyle='--', alpha=0.5, linewidth=1)
     ax.text(len(configs) - 0.5, data['booth']['gauss_slow'] + 3,
-            'booth baseline', color='#3b82f6', fontsize=9, ha='right')
+            'booth baseline', color='#3b82f6', fontsize=12, ha='right')
 
     plt.tight_layout()
     out = FIGURES_DIR / "power_dut_comparison_gauss_slow.png"
@@ -99,14 +98,12 @@ def plot_scaling_by_recoding(data):
     modes = ['standard', 'exact', 'approx_1', 'approx_2']
     x = np.arange(len(modes))
 
-    scenarios = ['uniform_fast', 'uniform_slow', 'uniform_very_slow', 'gauss_fast', 'gauss_slow', 'gauss_very_slow']
+    scenarios = ['uniform_fast', 'uniform_slow', 'gauss_fast', 'gauss_slow']
     colors = {
         'uniform_fast': "#09609f",
         'uniform_slow': "#5d92d7",
-        'uniform_very_slow': "#aad5f9",
         'gauss_fast':   "#d71717",
         'gauss_slow':   "#f04744",
-        'gauss_very_slow': "#ff8086",
     }
 
     fig, ax = plt.subplots(figsize=(9, 6))
