@@ -528,6 +528,26 @@ $\mathrm{ED} = +1$, а \texttt{11001/11010}~--- $\mathrm{ED} = -1$. Эти
 библиотеке стандартных ячеек. Этапы показаны на
 рисунке~\ref{fig:flow}.
 
+\begin{enumerate}
+  \item \textbf{Генерация стимулов.} Python-перекодировщик формирует
+        файлы пар $(a,\,b)$ и соответствующих перекодированных
+        векторов для заданного тестового сценария.
+  \item \textbf{Синтез.} Yosys~--- открытый инструмент синтеза RTL~---
+        транслирует Verilog-описание в gate-level нетлист,
+        отображённый на стандартные ячейки библиотеки
+        NanGate45~--- открытой академической библиотеки
+        технологической нормы 45~нм.
+  \item \textbf{Симуляция.} Icarus~Verilog~--- открытый симулятор
+        языка Verilog~--- прогоняет gate-level симуляцию нетлиста
+        на сформированных стимулах и записывает VCD-файл
+        (\textit{value change dump}) с активностью всех узлов схемы.
+  \item \textbf{Анализ мощности.} OpenSTA~--- открытый инструмент
+        статического временно\-го анализа~--- читает VCD через
+        команду \texttt{read\_vcd}, аннотирует число переключений
+        на каждую ячейку библиотеки и вычисляет отчёт динамической
+        мощности.
+\end{enumerate}
+
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}[node distance=0.55cm,
@@ -553,21 +573,6 @@ $\mathrm{ED} = +1$, а \texttt{11001/11010}~--- $\mathrm{ED} = -1$. Эти
   \caption{Маршрут синтеза и анализа мощности}
   \label{fig:flow}
 \end{figure}
-
-\begin{enumerate}
-  \item \textbf{Генерация стимулов.} Python-перекодировщик формирует
-        файлы пар $(a,\,b)$ и соответствующих перекодированных
-        векторов для заданного тестового сценария.
-  \item \textbf{Синтез.} Yosys синтезирует RTL в нетлист на
-        библиотеке стандартных ячеек NanGate45 (технологическая
-        норма 45~нм).
-  \item \textbf{Симуляция.} Icarus~Verilog прогоняет gate-level
-        симуляцию нетлиста на сформированных стимулах и записывает
-        VCD-файл с активностью всех узлов схемы.
-  \item \textbf{Анализ мощности.} OpenSTA читает VCD через команду
-        \texttt{read\_vcd}, аннотирует число переключений на каждую
-        ячейку библиотеки и вычисляет отчёт динамической мощности.
-\end{enumerate}
 
 \textbf{Тестовые сценарии.} Оценка мощности проводилась в 4~сценариях,
 образованных комбинацией двух параметров:
@@ -597,6 +602,26 @@ Cadence~Genus). По совокупности этих причин абсолю
 технологиях с более тонкими нормами абсолютная мощность, как правило,
 ниже, а доля пассивной утечки относительно динамической мощности
 иная; тем не менее качественное соотношение конфигураций сохранится.
+
+Отдельного внимания заслуживает ограничение сценариев
+\texttt{slow} и~\texttt{very\_slow}. В этих сценариях коэффициент
+обновляется редко~--- раз в~10 и~50~тактов соответственно~--- и
+умножитель длительное время работает с одним и~тем~же значением~$a$.
+Чтобы охватить весь 16-битный диапазон коэффициентов
+$[-32768,\,32767]$ (65\,536~значений), потребовалось~бы прогнать
+симуляцию суммарной длиной в~несколько сотен тысяч тактов, а
+порождаемый VCD-файл оказался очень большим. Это сделало~бы
+gate-level симуляцию и последующий анализ мощности слишком 
+ресурсоёмкими в рамках доступных вычислительных мощностей.
+Поэтому в~обоих сценариях использовалась случайная выборка из
+$N = 20\,000$~пар~$(a, b)$, что соответствует лишь части диапазона
+коэффициентов. Выборка генерировалась с~фиксированным зерном
+генератора случайных чисел, обеспечивая воспроизводимость
+результатов. Статистические свойства выборки~--- равномерное и
+гауссово распределения~--- достаточно близки к~реальным, чтобы
+\textit{относительные} оценки мощности между режимами оставались
+достоверными; тем не менее они не~заменяют исчерпывающего перебора и
+могут несколько недооценивать или переоценивать абсолютные значения.
 
 %% ============================================================
 %%  ГЛАВА 5
@@ -839,39 +864,47 @@ Cadence~Genus). По совокупности этих причин абсолю
 %% ============================================================
 %%  СПИСОК ИСТОЧНИКОВ
 %% ============================================================
-\chapter*{Список использованных источников}
+\begin{thebibliography}{9}
 \addcontentsline{toc}{chapter}{Список использованных источников}
 
-\begin{enumerate}
-  \item Booth~A.~D. A signed binary multiplication technique~//
-        The Quarterly Journal of Mechanics and Applied Mathematics.~---
-        1951.~--- Vol.~4, №~2.~--- P.~236--240.
+\bibitem{booth1951}
+  Booth~A.~D. A signed binary multiplication technique~//
+  The Quarterly Journal of Mechanics and Applied Mathematics.~---
+  1951.~--- Vol.~4, №~2.~--- P.~236--240.
 
-  \item Zhu~M., Li~H., Song~Y. et al. Power-efficient approximate
-        Booth multiplier using zero-skipping recoding~//
-        Microelectronics Journal.~--- 2025.~---
-        DOI:~10.1016/j.mejo.2025.106394.
+\bibitem{zhu2025}
+  Zhu~M., Li~H., Song~Y. et al. Power-efficient approximate
+  Booth multiplier using zero-skipping recoding~//
+  Microelectronics Journal.~--- 2025.~---
+  DOI:~10.1016/j.mejo.2025.106394.
 
-  \item Haykin~S. Adaptive Filter Theory.~---
-        5th ed.~--- Pearson, 2013.~--- 907~p.
+\bibitem{haykin2013}
+  Haykin~S. Adaptive Filter Theory.~---
+  5th ed.~--- Pearson, 2013.~--- 907~p.
 
-  \item Han~J., Orshansky~M. Approximate computing: An emerging paradigm
-        for energy-efficient design~//
-        Proc. 18th IEEE European Test Symposium (ETS).~---
-        2013.~--- P.~1--6.
+\bibitem{han2013}
+  Han~J., Orshansky~M. Approximate computing: An emerging paradigm
+  for energy-efficient design~//
+  Proc. 18th IEEE European Test Symposium (ETS).~---
+  2013.~--- P.~1--6.
 
-  \item Wolf~C. Yosys Open SYnthesis Suite~[Электронный ресурс].~---
-        URL: \url{https://yosyshq.net/yosys/} (дата обращения: 2026).
+\bibitem{wolf2016yosys}
+  Wolf~C. Yosys Open SYnthesis Suite~[Электронный ресурс].~---
+  URL: \url{https://yosyshq.net/yosys/} (дата обращения: 2026).
 
-  \item Percey~J. OpenSTA: Open Static Timing Analyzer~[Электронный ресурс].~---
-        URL: \url{https://github.com/The-OpenROAD-Project/OpenSTA}
-        (дата обращения: 2026).
+\bibitem{percey2019opensta}
+  Percey~J. OpenSTA: Open Static Timing Analyzer~[Электронный ресурс].~---
+  URL: \url{https://github.com/The-OpenROAD-Project/OpenSTA}
+  (дата обращения: 2026).
 
-  \item Nangate Inc. NanGate 45nm Open Cell Library~[Электронный ресурс].~---
-        URL: \url{https://si2.org/} (дата обращения: 2026).
+\bibitem{nangate45}
+  Nangate Inc. NanGate 45nm Open Cell Library~[Электронный ресурс].~---
+  URL: \url{https://si2.org/} (дата обращения: 2026).
 
-  \item Williams~T.~W., Mercer~M.~R. (eds.) VLSI Testing.~---
-        Springer, 1986.
-\end{enumerate}
+\bibitem{williams1986}
+  Williams~T.~W., Mercer~M.~R. (eds.) VLSI Testing.~---
+  Springer, 1986.
+
+\end{thebibliography}
 
 \end{document}

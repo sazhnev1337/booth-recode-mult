@@ -106,6 +106,12 @@
 \setlist[enumerate]{label=\arabic*), leftmargin=\parindent}
 \setlist[itemize]{leftmargin=\parindent}
 
+% ─── Библиография ─────────────────────────────────────────────
+\renewcommand{\bibname}{Список использованных источников}
+\makeatletter
+\renewcommand\@biblabel[1]{#1.}   % [1] → 1.
+\makeatother
+
 % ─── TikZ (для схемы маршрута) ────────────────────────────────
 \usepackage{tikz}
 \usetikzlibrary{positioning, arrows.meta}
