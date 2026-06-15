@@ -1,0 +1,111 @@
+% ─── Шрифты и язык ────────────────────────────────────────────
+\usepackage{fontspec}
+\usepackage[main=russian, english]{babel}
+\setmainfont{Times New Roman}
+
+% ─── Поля страницы (ГОСТ 7.32-2017) ──────────────────────────
+\usepackage{geometry}
+\geometry{
+  a4paper,
+  left   = 30mm,
+  right  = 15mm,
+  top    = 20mm,
+  bottom = 20mm
+}
+
+% ─── Межстрочный интервал и отступ ───────────────────────────
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{indentfirst}
+\setlength{\parindent}{1.25cm}
+
+% ─── Математика ───────────────────────────────────────────────
+\usepackage{amsmath, amssymb}
+
+% ─── Графика ─────────────────────────────────────────────────
+\usepackage{graphicx}
+\graphicspath{{../sch/}{../../py/figures/}}
+\usepackage{float}
+
+% ─── Таблицы ─────────────────────────────────────────────────
+\usepackage{booktabs}
+\usepackage{array}
+
+% ─── Ссылки ──────────────────────────────────────────────────
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+
+% ─── Подписи к рисункам и таблицам (ГОСТ) ────────────────────
+\usepackage{caption}
+\DeclareCaptionLabelSeparator{emdash}{~---~}
+\captionsetup[figure]{
+  name      = Рисунок,
+  labelsep  = emdash,
+  justification = centering,
+  position  = below,
+  font      = normalsize
+}
+\captionsetup[table]{
+  name      = Таблица,
+  labelsep  = emdash,
+  justification = raggedright,
+  singlelinecheck = false,
+  position  = top,
+  font      = normalsize
+}
+
+% ─── Сквозная нумерация рисунков и таблиц ────────────────────
+\usepackage{chngcntr}
+\counterwithout{figure}{chapter}
+\counterwithout{table}{chapter}
+
+% ─── Заголовки разделов (ГОСТ) ───────────────────────────────
+\usepackage{titlesec}
+
+\titleformat{\chapter}[block]
+  {\centering\normalfont\fontsize{14}{16.8}\selectfont\bfseries}
+  {\thechapter.}{0.5em}{}
+\titlespacing*{\chapter}{0pt}{0pt}{14pt}
+
+\titleformat{\section}[block]
+  {\normalfont\fontsize{14}{16.8}\selectfont\bfseries}
+  {\thesection.}{0.5em}{}
+\titlespacing*{\section}{0pt}{14pt}{6pt}
+
+\titleformat{\subsection}[block]
+  {\normalfont\fontsize{12}{14.4}\selectfont\bfseries}
+  {\thesubsection.}{0.5em}{}
+\titlespacing*{\subsection}{0pt}{12pt}{4pt}
+
+% ─── Колонтитулы и нумерация страниц ─────────────────────────
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyfoot[C]{\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+}
+
+% ─── Оглавление ───────────────────────────────────────────────
+\usepackage{tocloft}
+\renewcommand{\cfttoctitlefont}{\hfill\normalfont\fontsize{14}{16.8}\bfseries}
+\renewcommand{\cftaftertoctitle}{\hfill}
+\setlength{\cftbeforechapskip}{4pt}
+\setlength{\cftbeforesecskip}{0pt}
+
+% ─── Нумерация формул по главам ───────────────────────────────
+\numberwithin{equation}{chapter}
+
+% ─── Списки ───────────────────────────────────────────────────
+\usepackage{enumitem}
+\setlist{itemsep=2pt, topsep=4pt}
+\setlist[enumerate]{label=\arabic*), leftmargin=\parindent}
+\setlist[itemize]{leftmargin=\parindent}
+
+% ─── TikZ (для схемы маршрута) ────────────────────────────────
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta}
