@@ -1,0 +1,45 @@
+
+7. Printing statistics.
+
+=== mult_booth_extrec_20 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     4017        - wires
+     5177        - wire bits
+       81        - public wires
+     1241        - public wire bits
+        5        - ports
+       92        - port bits
+     1902 2.62E+03 cells
+       10        -   $scopeinfo
+       66   70.224   AND2_X1
+       37    49.21   AND3_X1
+        1    1.596   AND4_X1
+        3     3.99   AOI211_X1
+      156  165.984   AOI21_X1
+      171   227.43   AOI22_X1
+       90    478.8   DFFR_X1
+      180    95.76   INV_X1
+        1    1.862   MUX2_X1
+      163  130.074   NAND2_X1
+       33   35.112   NAND3_X1
+      160   127.68   NOR2_X1
+       21   22.344   NOR3_X1
+        5     6.65   OAI211_X1
+      106  112.784   OAI21_X1
+        3    4.788   OAI221_X1
+        4     5.32   OAI22_X1
+        3    5.586   OAI33_X1
+       39   41.496   OR2_X1
+       34    45.22   OR3_X1
+        2    3.192   OR4_X1
+      437  697.452   XNOR2_X1
+      177  282.492   XOR2_X1
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\mult_booth_extrec_20': 2615.046000
+     of which used for sequential elements: 478.800000 (18.31%)
+

@@ -5,6 +5,7 @@
 #    pt_shell -f ../export/power_pt.tcl
 #
 #  Prerequisites:
+#    ../syn/netlists/mult_naive_gate.v
 #    ../syn/netlists/mult_booth_gate.v
 #    ../syn/netlists/mult_booth_extrec_gate.v
 #    ../sim/waves/power_<module>_<scenario>[_<mode>].vcd  (from ncverilog run)
@@ -41,6 +42,21 @@ proc measure_power {vcd strip_path rpt des} {
     update_power
     redirect $rpt { report_power }
     puts "  -> $rpt"
+}
+
+# ── mult_naive_gate ───────────────────────────────────────────────────────────
+puts "\n=== mult_naive_gate ==="
+
+read_verilog ${NETLIST_DIR}/mult_naive_gate.v
+link_design mult_naive
+create_clock -period 2.036 [get_ports {clk}]
+
+foreach scn $SCENARIOS {
+    puts "naive / $scn"
+    measure_power \
+        "${VCD_DIR}/power_naive_${scn}.vcd" \
+        "tb_mult_naive/dut" \
+        "${RPT_DIR}/power_naive_${scn}.rpt" "naive_multiplier"
 }
 
 # ── mult_booth_gate ───────────────────────────────────────────────────────────

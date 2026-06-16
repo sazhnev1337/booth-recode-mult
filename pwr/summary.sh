@@ -17,7 +17,7 @@ EXTREC_MODES="standard exact approx_1 approx_2"
 
     printf "%-25s" "booth"
     for scn in $SCENARIOS; do
-        val=$(get_total "reports/power_booth_${scn}.rpt")
+        val=$(get_total "reports/power_booth8_${scn}.rpt")
         printf " %14s" "$val"
     done
     echo ""
@@ -25,11 +25,11 @@ EXTREC_MODES="standard exact approx_1 approx_2"
     for mode in $EXTREC_MODES; do
         printf "%-25s" "booth_extrec_${mode}"
         for scn in $SCENARIOS; do
-            val=$(get_total "reports/power_booth_extrec_${scn}_${mode}.rpt")
+            val=$(get_total "reports/power_booth_extrec8_${scn}_${mode}.rpt")
             printf " %14s" "$val"
         done
         echo ""
     done
-} > reports/summary_power.txt
+} > reports/summary_power8.txt
 
-cat reports/summary_power.txt
+cat reports/summary_power8.txt

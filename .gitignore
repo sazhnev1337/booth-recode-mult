@@ -12,6 +12,7 @@ doc/presentation/
 !doc/presentation/presentation.tex
 !doc/presentation/preamble.tex
 .claude/
+CLAUDE.md
 
 # LaTeX build artifacts
 *.aux

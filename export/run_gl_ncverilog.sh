@@ -6,6 +6,7 @@
 #
 # Prerequisites (must exist in sim/ on the target machine):
 #   x_run_sim_cad_gl.vc        — CAD environment: libraries, SDF, timescale
+#   ../syn/netlists/mult_naive_gate.v
 #   ../syn/netlists/mult_booth_gate.v
 #   ../syn/netlists/mult_booth_extrec_gate.v
 #
@@ -52,7 +53,20 @@ run_sim() {
     echo "  -> $out"
 }
 
+# ── mult_naive_gate: 4 scenarios ─────────────────────────────────────────────
+echo "=== mult_naive_gate ==="
+for scn in $SCENARIOS; do
+    echo "naive / $scn"
+    run_sim \
+        "tb/tb_mult_naive.v" \
+        "../syn/netlists/mult_naive_gate.v" \
+        "waves/power_naive_${scn}.vcd" \
+        "+STIM=data/stim_${scn}_standard.txt" \
+        "+N=$N"
+done
+
 # ── mult_booth_gate: 4 scenarios ─────────────────────────────────────────────
+echo ""
 echo "=== mult_booth_gate ==="
 for scn in $SCENARIOS; do
     echo "booth / $scn"
