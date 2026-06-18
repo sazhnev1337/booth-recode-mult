@@ -4,6 +4,9 @@ pwr/_gen/
 sim/vvp/
 sim/data/
 doc/notes.txt
+doc/litobzor.md
+doc/private_docs/
+doc/sources/abstracts.md
 py/.venv
 doc/results/*
 !doc/results/results.pdf

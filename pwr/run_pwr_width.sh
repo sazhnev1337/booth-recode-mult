@@ -13,7 +13,7 @@ if [ -z "$WIDTH" ]; then
 fi
 
 LIB="../syn/lib/NangateOpenCellLibrary_typical.lib"
-SCENARIOS="uniform_fast uniform_slow gauss_fast gauss_slow"
+SCENARIOS="${SCENARIOS:-uniform_fast uniform_slow gauss_fast gauss_slow}"
 EXTREC_MODES="standard exact approx_1 approx_2"
 
 mkdir -p reports _gen

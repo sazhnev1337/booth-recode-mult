@@ -1,45 +1,41 @@
 
-7. Printing statistics.
+9. Printing statistics.
 
 === mult_booth_extrec_20 ===
 
         +----------Local Count, excluding submodules.
         |        +-Local Area, excluding submodules.
         |        | 
-     4017        - wires
-     5177        - wire bits
-       81        - public wires
-     1241        - public wire bits
+     3495        - wires
+     3669        - wire bits
+        8        - public wires
+      182        - public wire bits
         5        - ports
        92        - port bits
-     1902 2.62E+03 cells
-       10        -   $scopeinfo
-       66   70.224   AND2_X1
-       37    49.21   AND3_X1
-        1    1.596   AND4_X1
-        3     3.99   AOI211_X1
-      156  165.984   AOI21_X1
-      171   227.43   AOI22_X1
+     3527 4.08E+03 cells
+       29   30.856   AND2_X1
+       52    69.16   AND3_X1
+        4    6.384   AND4_X1
+      263  279.832   AOI21_X1
+      110    146.3   AOI22_X1
        90    478.8   DFFR_X1
-      180    95.76   INV_X1
-        1    1.862   MUX2_X1
-      163  130.074   NAND2_X1
-       33   35.112   NAND3_X1
-      160   127.68   NOR2_X1
-       21   22.344   NOR3_X1
-        5     6.65   OAI211_X1
-      106  112.784   OAI21_X1
-        3    4.788   OAI221_X1
-        4     5.32   OAI22_X1
-        3    5.586   OAI33_X1
-       39   41.496   OR2_X1
-       34    45.22   OR3_X1
-        2    3.192   OR4_X1
-      437  697.452   XNOR2_X1
-      177  282.492   XOR2_X1
+      319  169.708   INV_X1
+        2    3.724   MUX2_X1
+      732  584.136   NAND2_X1
+      663  705.432   NAND3_X1
+      218   289.94   NAND4_X1
+       80    63.84   NOR2_X1
+       14   14.896   NOR3_X1
+        1     1.33   NOR4_X1
+      114   151.62   OAI211_X1
+      395   420.28   OAI21_X1
+      118  188.328   OAI221_X1
+      130    172.9   OAI22_X1
+       12   12.768   OR2_X1
+        3     3.99   OR3_X1
+      163  260.148   XNOR2_X1
+       15    23.94   XOR2_X1
 
-   Area for cell type $scopeinfo is unknown!
-
-   Chip area for module '\mult_booth_extrec_20': 2615.046000
-     of which used for sequential elements: 478.800000 (18.31%)
+   Chip area for module '\mult_booth_extrec_20': 4078.312000
+     of which used for sequential elements: 478.800000 (11.74%)
 

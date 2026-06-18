@@ -1,42 +1,39 @@
 
-8. Printing statistics.
+10. Printing statistics.
 
 === mult_booth_8 ===
 
         +----------Local Count, excluding submodules.
         |        +-Local Area, excluding submodules.
         |        | 
-      747        - wires
-      964        - wire bits
-       56        - public wires
-      273        - public wire bits
+      565        - wires
+      624        - wire bits
+       13        - public wires
+       72        - public wire bits
         5        - ports
        34        - port bits
-      338  522.424 cells
-        8        -   $scopeinfo
-       13   13.832   AND2_X1
-        4     5.32   AND3_X1
-        1    1.596   AND4_X1
-        6     7.98   AOI211_X1
-       22   23.408   AOI21_X1
+      568  722.722 cells
+       10    10.64   AND2_X1
+        6     7.98   AND3_X1
+       48   51.072   AOI21_X1
+        8    10.64   AOI22_X1
        32   170.24   DFFR_X1
-       24   12.768   INV_X1
-        1    1.862   MUX2_X1
-       35    27.93   NAND2_X1
-        3    3.192   NAND3_X1
-       20    15.96   NOR2_X1
-        7    7.448   NOR3_X1
-        7     9.31   OAI211_X1
-       24   25.536   OAI21_X1
-       19    25.27   OAI22_X1
-        2    3.724   OAI33_X1
-       14   14.896   OR2_X1
-        4     5.32   OR3_X1
-       55    87.78   XNOR2_X1
-       37   59.052   XOR2_X1
+       51   27.132   INV_X1
+        2    3.724   MUX2_X1
+       88   70.224   NAND2_X1
+      112  119.168   NAND3_X1
+       22    29.26   NAND4_X1
+       23   18.354   NOR2_X1
+       15    15.96   NOR3_X1
+       22    29.26   OAI211_X1
+       81   86.184   OAI21_X1
+        1    1.596   OAI221_X1
+        9    11.97   OAI22_X1
+        1    1.064   OR2_X1
+        3     3.99   OR3_X1
+       31   49.476   XNOR2_X1
+        3    4.788   XOR2_X1
 
-   Area for cell type $scopeinfo is unknown!
-
-   Chip area for module '\mult_booth_8': 522.424000
-     of which used for sequential elements: 170.240000 (32.59%)
+   Chip area for module '\mult_booth_8': 722.722000
+     of which used for sequential elements: 170.240000 (23.56%)
 

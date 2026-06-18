@@ -292,8 +292,8 @@
     \toprule
     Модуль & Площадь, мкм² \\
     \midrule
-    \texttt{mult\_booth}         & 1523 \\
-    \texttt{mult\_booth\_extrec} & 1518 \\
+    \texttt{mult\_booth}         & 2725 \\
+    \texttt{mult\_booth\_extrec} & 2698 \\
     \bottomrule
   \end{tabular}
 
@@ -303,8 +303,8 @@
     (вычисление \texttt{neg}, \texttt{one}, \texttt{two} из коэффициента)\\[4pt]
     \textbf{$+$} Входной регистр коэффициента расширен:
     16 бит $\to$ 24 бита (перекодированный вектор)\\[4pt]
-    Два эффекта взаимно компенсируются $\Rightarrow$
-    площадь \textbf{практически не меняется}
+    Уменьшение слегка перевешивает $\Rightarrow$
+    площадь \textbf{не растёт} (предлагаемый на $1\%$ меньше)
   \end{block}
 \end{frame}
 
@@ -319,10 +319,10 @@
         \toprule
         Конфигурация & Мощность, мкВт & Экономия \\
         \midrule
-        booth (базовый)  & 245              & ---       \\
-        extrec exact     & 244              & $+0.4\%$  \\
-        extrec approx\_1 & 241              & $+1.6\%$  \\
-        extrec approx\_2 & \textbf{238}     & \alert{$+2.9\%$} \\
+        booth (базовый)  & 413              & ---       \\
+        extrec exact     & 403              & $+2.4\%$  \\
+        extrec approx\_1 & 399              & $+3.4\%$  \\
+        extrec approx\_2 & \textbf{395}     & \alert{$+4.4\%$} \\
         \bottomrule
       \end{tabular}
 
@@ -332,8 +332,8 @@
         \textbf{Slow:} коэффициент стабилен дольше, перекодировка
         амортизируется на большем числе тактов\\[3pt]
         \textbf{Gauss:} реалистичный сценарий — речевой и аудиосигнал
-        гауссово распределён; абсолютная экономия одинакова для обоих
-        распределений ($\approx 7$\,мкВт)
+        гауссово распределён; абсолютная экономия близка для обоих
+        распределений ($\approx 18$\,мкВт в slow-сценарии)
       \end{block}
 
     \column{0.46\textwidth}
@@ -381,10 +381,10 @@
     \toprule
     Режим & Экономия мощн. & SNR (гаусс) \\
     \midrule
-    standard  & $-1.6\%$          & $\infty$    \\
-    exact     & $+0.4\%$          & $\infty$    \\
-    approx\_1 & $+1.6\%$          & 76.7\,дБ   \\
-    approx\_2 & \alert{$+2.9\%$}  & 52.3\,дБ   \\
+    standard  & $+0.2\%$          & $\infty$    \\
+    exact     & $+2.4\%$          & $\infty$    \\
+    approx\_1 & $+3.4\%$          & 76.7\,дБ   \\
+    approx\_2 & \alert{$+4.4\%$}  & 52.3\,дБ   \\
     \bottomrule
   \end{tabular}
 
@@ -399,10 +399,11 @@
 % ── СЛАЙД 15: Заключение ────────────────────────────────────
 \begin{frame}{Заключение}
   \begin{itemize}
-    \item Вынесенный рекодер: \textbf{$-2.9\%$ мощности}
+    \item Вынесенный рекодер: \textbf{$-4.4\%$ мощности}
           (gauss\_slow, approx\_2)
-    \item Площадь умножителя \textbf{не возрастает} — два эффекта
-          компенсируют друг друга
+    \item Площадь умножителя \textbf{не возрастает} (даже на $1\%$ меньше)
+          — два эффекта компенсируют друг друга
+    \item Эффективность \textbf{растёт с разрядностью} (проверено 8/16/20 бит)
     \item Единый RTL для всех режимов точности
     \item approx\_2: SNR $= 52\,$дБ, смещение $\approx 0$ —
           пригоден для большинства DSP-задач
@@ -432,9 +433,9 @@
   \begin{center}
     {\footnotesize\color{mipt-light}
     \textbf{Использованная литература:}\\[4pt]
-    [1] Zhu~M. et al. Power-efficient approximate Booth multiplier with\\
-    zero-skipping recoding.
-    \textit{Microelectronics Journal}, 2025.}
+    [1] Zhu~X., Li~H., Song~Y. Exact and approximate Radix-4 recoding\\
+    multipliers for high-efficiency computation.
+    \textit{Microelectronics Journal}, 2025. Vol.~157, 106579.}
   \end{center}
 \end{frame}
 
@@ -442,10 +443,11 @@
 \begin{frame}[allowframebreaks]{Список источников}
   \begin{thebibliography}{9}
     \bibitem{zhu2025}
-      Zhu~M., Li~H., Song~Y. et al.
-      Power-efficient approximate Booth multiplier using zero-skipping recoding.
-      \textit{Microelectronics Journal}, 2025.
-      DOI:~10.1016/j.mejo.2025.106394
+      Zhu~X., Li~H., Song~Y.
+      Exact and approximate Radix-4 recoding multipliers for high-efficiency
+      computation.
+      \textit{Microelectronics Journal}, 2025. Vol.~157, 106579.
+      DOI:~10.1016/j.mejo.2025.106579
   \end{thebibliography}
 \end{frame}
 

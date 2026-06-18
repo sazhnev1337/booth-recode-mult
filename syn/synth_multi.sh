@@ -10,13 +10,17 @@ synth_one() {
     local cfg=$1; local top=$2; shift 2
     local rtl_files="$*"
 
+    # Рецепт идентичен synth.sh (16 бит): один abc-скрипт на все разрядности,
+    # иначе мэппинг extrec-датапаса немонотонен по ширине (см. коммент в synth.sh).
     local ys="_gen/synth_${cfg}.ys"
     {
         for f in $rtl_files; do echo "read_verilog ${f}"; done
         echo "synth -top ${top} -flatten"
         echo "dfflibmap -liberty ${LIB}"
-        echo "abc -liberty ${LIB}"
-        echo "write_verilog netlists/${cfg}.v"
+        echo "abc -liberty ${LIB} -script +strash;dch;map"
+        echo "opt_clean -purge"
+        echo "setundef -undriven -zero"
+        echo "write_verilog -noattr netlists/${cfg}.v"
         echo "tee -o reports/area_${cfg}.rpt stat -liberty ${LIB}"
     } > "$ys"
 

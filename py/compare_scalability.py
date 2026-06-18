@@ -116,15 +116,22 @@ for w in [8, 16, 20]:
             print(f"  {w:>4}×{w:<2}  {mode:>10}  {fmt(nmed):>12}  {fmt(mred):>12}  {snr_s:>10}")
     print(f"  {'─'*6}  {'─'*10}  {'─'*12}  {'─'*12}  {'─'*10}")
 
+# "vs booth"    — относительно mult_booth (другая архитектура: внутренний
+#                 рекодер + узкая шина a). Загрязнён overhead'ом вынесенной
+#                 широкой шины a_recoded, поэтому НЕ фигура эффекта перекодировки.
+# "vs standard" — относительно extrec в passthrough (та же архитектура, нулей
+#                 не добавляет). Изолирует именно вклад зануления строк PPG.
 for scn in SCENARIOS:
     print()
     print(f"╔══ POWER ({scn}, total, Вт) {'═'*(43-len(scn))}╗")
-    print(f"  {'Width':>6}  {'config':>22}  {'power, Вт':>12}  {'vs booth':>10}")
-    print(f"  {'─'*6}  {'─'*22}  {'─'*12}  {'─'*10}")
+    print(f"  {'Width':>6}  {'config':>22}  {'power, Вт':>12}  {'vs booth':>10}  {'vs standard':>12}")
+    print(f"  {'─'*6}  {'─'*22}  {'─'*12}  {'─'*10}  {'─'*12}")
     for w in [8, 16, 20]:
-        ref = PWR.get((w, 'booth', scn))
-        print(f"  {w:>4}×{w:<2}  {'booth':>22}  {fmt(ref):>12}  {'—':>10}")
+        ref_b = PWR.get((w, 'booth', scn))      # архитектурная нижняя граница (справочно)
+        ref_s = PWR.get((w, 'standard', scn))   # база эффекта перекодировки
+        print(f"  {w:>4}×{w:<2}  {'booth (ref)':>22}  {fmt(ref_b):>12}  {'—':>10}  {pct(ref_b, ref_s):>12}")
         for mode in ['standard', 'exact', 'approx_1', 'approx_2']:
             v = PWR.get((w, mode, scn))
-            print(f"  {w:>4}×{w:<2}  {f'extrec_{mode}':>22}  {fmt(v):>12}  {pct(v, ref):>10}")
-        print(f"  {'─'*6}  {'─'*22}  {'─'*12}  {'─'*10}")
+            vs_std = '—' if mode == 'standard' else pct(v, ref_s)
+            print(f"  {w:>4}×{w:<2}  {f'extrec_{mode}':>22}  {fmt(v):>12}  {pct(v, ref_b):>10}  {vs_std:>12}")
+        print(f"  {'─'*6}  {'─'*22}  {'─'*12}  {'─'*10}  {'─'*12}")

@@ -19,7 +19,7 @@ fi
 
 LIB="../syn/lib/NangateOpenCellLibrary.v"
 NETLISTS="../syn/netlists"
-SCENARIOS="uniform_fast uniform_slow gauss_fast gauss_slow"
+SCENARIOS="${SCENARIOS:-uniform_fast uniform_slow gauss_fast gauss_slow}"
 EXTREC_MODES="standard exact approx_1 approx_2"
 N=20000
 

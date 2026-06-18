@@ -38,21 +38,18 @@ for f in $RTL_FILES; do
 "
 done
 
+# Унифицированный рецепт синтеза (один и тот же для 8/16/20 — см. synth_multi.sh).
+# Дефолтный abc-mapper раскладывал датапас extrec нестабильно по разрядности
+# (на 20 битах комбинационная логика extrec выходила больше booth — физически
+# невозможно при модели (N/2)(y-x)), что давало немонотонный overhead площади
+# и мощности. Скрипт abc +strash;dch;map оптимизирует консистентно по ширинам.
 cat > _gen/synth_${CONFIG}.ys <<EOF
 ${READ_LINES}
 hierarchy -check -top ${TOP}
 
-proc
-opt -full
-# alumacc
-# maccmap
-techmap
-opt -fast
-flatten
-
+synth -top ${TOP} -flatten
 dfflibmap -liberty lib/NangateOpenCellLibrary_typical.lib
-abc -liberty lib/NangateOpenCellLibrary_typical.lib
-
+abc -liberty lib/NangateOpenCellLibrary_typical.lib -script +strash;dch;map
 opt_clean -purge
 setundef -undriven -zero
 
