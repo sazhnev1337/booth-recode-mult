@@ -26,6 +26,10 @@ OUTPUT_NAME = {8: "patterns_zero_rows_by_mode_8.png",
                16: "patterns_zero_rows_by_mode.png",
                20: "patterns_zero_rows_by_mode_20.png"}
 
+# Русские названия распределений для заголовков подграфиков.
+DIST_RU = {"uniform": "Равномерное распределение",
+           "gauss": "Гауссово распределение"}
+
 
 def sample(distribution, rng, width):
     lo = -(1 << (width - 1))
@@ -69,21 +73,23 @@ def plot_distribution(ax, distribution, modes, width):
     bar_width = 0.6
 
     # Стопка снизу вверх: natural → exact → approx.
-    ax.bar(x, natural_means, bar_width, label='Natural Booth zeros', color='#888888')
+    ax.bar(x, natural_means, bar_width, label='Естественные нули Бута', color='#888888')
     ax.bar(x, exact_means, bar_width, bottom=natural_means,
-           label='Exact recodes', color='#3b82f6')
+           label='Точная перекодировка', color='#3b82f6')
     ax.bar(x, approx_means, bar_width,
            bottom=[n + e for n, e in zip(natural_means, exact_means)],
-           label='Approx recodes', color='#ef4444')
+           label='Приближённая перекодировка', color='#ef4444')
 
     n_pairs = width // 2
     ax.set_xticks(x)
-    ax.set_xticklabels(modes, rotation=20)
-    ax.set_ylabel(f'Avg number of zero PP rows (per {width}-bit operand)')
-    ax.set_title(f'{distribution.capitalize()} distribution')
+    ax.set_xticklabels(modes, rotation=20, fontsize=12)
+    ax.tick_params(axis='y', labelsize=12)
+    ax.set_ylabel(f'Среднее число нулевых строк PP ({width}x{width})',
+                  fontsize=13)
+    ax.set_title(DIST_RU[distribution], fontsize=14)
     ax.set_ylim(0, n_pairs)
     ax.grid(axis='y', alpha=0.3)
-    ax.legend(loc='upper left')
+    ax.legend(loc='upper left', fontsize=12)
 
     return natural_means, exact_means, approx_means
 
@@ -93,8 +99,10 @@ def plot_width(width, modes):
     plot_distribution(axes[0], 'uniform', modes, width)
     gauss_stats = plot_distribution(axes[1], 'gauss', modes, width)
 
-    fig.suptitle(f'Average zero rows in PP matrix by recoding mode ({width}×{width})',
-                 fontsize=14)
+    fig.suptitle(
+        f'Среднее число нулевых строк матрицы PP по режимам перекодировки '
+        f'({width}×{width})',
+        fontsize=16)
     plt.tight_layout()
     out = FIGURES_DIR / OUTPUT_NAME[width]
     plt.savefig(out, dpi=120, bbox_inches='tight')

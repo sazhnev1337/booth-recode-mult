@@ -18,6 +18,9 @@ N_SAMPLES = 1_000_000
 SIGMA = 8000
 SEED = 0xDEADBEEF
 
+# Русские подписи распределений для легенды.
+DIST_RU = {"uniform": "равномерное", "gauss": "гауссово"}
+
 
 def sample(distribution, rng):
     if distribution == "uniform":
@@ -103,44 +106,47 @@ def main():
     ax = axes[0]
     for d in distributions:
         y = [v if v > 0 else float('nan') for v in nmed_data[d]]
-        ax.plot(x_pos, y, marker='o', label=d,
+        ax.plot(x_pos, y, marker='o', label=DIST_RU[d],
                 color=colors[d], linewidth=2)
     ax.set_yscale('log')
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(modes, rotation=15, fontsize=11)
-    ax.set_ylabel('NMED', fontsize=12)
-    ax.set_title('Normalized Mean Error Distance', fontsize=12)
+    ax.set_xticklabels(modes, rotation=15, fontsize=12)
+    ax.tick_params(axis='y', labelsize=12)
+    ax.set_ylabel('NMED', fontsize=13)
+    ax.set_title('Нормированное среднее\nрасстояние ошибки', fontsize=13)
     ax.grid(True, which='both', alpha=0.3)
-    ax.legend(fontsize=11)
+    ax.legend(fontsize=12)
 
     # MRED
     ax = axes[1]
     for d in distributions:
         y = [v if v > 0 else float('nan') for v in mred_data[d]]
-        ax.plot(x_pos, y, marker='o', label=d,
+        ax.plot(x_pos, y, marker='o', label=DIST_RU[d],
                 color=colors[d], linewidth=2)
     ax.set_yscale('log')
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(modes, rotation=15, fontsize=11)
-    ax.set_ylabel('MRED', fontsize=12)
-    ax.set_title('Mean Relative Error Distance', fontsize=12)
+    ax.set_xticklabels(modes, rotation=15, fontsize=12)
+    ax.tick_params(axis='y', labelsize=12)
+    ax.set_ylabel('MRED', fontsize=13)
+    ax.set_title('Среднее относительное\nрасстояние ошибки', fontsize=13)
     ax.grid(True, which='both', alpha=0.3)
-    ax.legend(fontsize=11)
+    ax.legend(fontsize=12)
 
     # SNR
     ax = axes[2]
     for d in distributions:
         y = [v if math.isfinite(v) else float('nan') for v in snr_data[d]]
-        ax.plot(x_pos, y, marker='o', label=d,
+        ax.plot(x_pos, y, marker='o', label=DIST_RU[d],
                 color=colors[d], linewidth=2)
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(modes, rotation=15, fontsize=11)
-    ax.set_ylabel('SNR (dB)', fontsize=12)
-    ax.set_title('Signal-to-Noise Ratio', fontsize=12)
+    ax.set_xticklabels(modes, rotation=15, fontsize=12)
+    ax.tick_params(axis='y', labelsize=12)
+    ax.set_ylabel('SNR, дБ', fontsize=13)
+    ax.set_title('Отношение сигнал/шум', fontsize=13)
     ax.grid(True, alpha=0.3)
-    ax.legend(fontsize=11)
+    ax.legend(fontsize=12)
 
-    fig.suptitle('Accuracy metrics by recoding mode', fontsize=13)
+    fig.suptitle('Метрики точности по режимам перекодировки', fontsize=15)
     plt.tight_layout()
     out = FIGURES_DIR / "accuracy_nmed_mred_snr.png"
     plt.savefig(out, dpi=120, bbox_inches='tight')
@@ -153,44 +159,47 @@ def main():
     ax = axes[0]
     for d in distributions:
         y = [v if v > 0 else float('nan') for v in nmed_data[d]]
-        ax.plot(x_pos, y, marker='o', label=d,
+        ax.plot(x_pos, y, marker='o', label=DIST_RU[d],
                 color=colors[d], linewidth=2)
     ax.set_yscale('log')
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(modes, rotation=15, fontsize=11)
-    ax.set_ylabel('NMED', fontsize=12)
-    ax.set_title('Normalized Mean Error Distance', fontsize=12)
+    ax.set_xticklabels(modes, rotation=15, fontsize=12)
+    ax.tick_params(axis='y', labelsize=12)
+    ax.set_ylabel('NMED', fontsize=13)
+    ax.set_title('Нормированное среднее\nрасстояние ошибки', fontsize=13)
     ax.grid(True, which='both', alpha=0.3)
-    ax.legend(fontsize=11)
+    ax.legend(fontsize=12)
 
     # MRED
     ax = axes[1]
     for d in distributions:
         y = [v if v > 0 else float('nan') for v in mred_data[d]]
-        ax.plot(x_pos, y, marker='o', label=d,
+        ax.plot(x_pos, y, marker='o', label=DIST_RU[d],
                 color=colors[d], linewidth=2)
     ax.set_yscale('log')
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(modes, rotation=15, fontsize=11)
-    ax.set_ylabel('MRED', fontsize=12)
-    ax.set_title('Mean Relative Error Distance', fontsize=12)
+    ax.set_xticklabels(modes, rotation=15, fontsize=12)
+    ax.tick_params(axis='y', labelsize=12)
+    ax.set_ylabel('MRED', fontsize=13)
+    ax.set_title('Среднее относительное\nрасстояние ошибки', fontsize=13)
     ax.grid(True, which='both', alpha=0.3)
-    ax.legend(fontsize=11)
+    ax.legend(fontsize=12)
 
     # SNR
     ax = axes[2]
     for d in distributions:
         y = [v if math.isfinite(v) else float('nan') for v in snr_data[d]]
-        ax.plot(x_pos, y, marker='o', label=d,
+        ax.plot(x_pos, y, marker='o', label=DIST_RU[d],
                 color=colors[d], linewidth=2)
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(modes, rotation=15, fontsize=11)
-    ax.set_ylabel('SNR (dB)', fontsize=12)
-    ax.set_title('Signal-to-Noise Ratio', fontsize=12)
+    ax.set_xticklabels(modes, rotation=15, fontsize=12)
+    ax.tick_params(axis='y', labelsize=12)
+    ax.set_ylabel('SNR, дБ', fontsize=13)
+    ax.set_title('Отношение сигнал/шум', fontsize=13)
     ax.grid(True, alpha=0.3)
-    ax.legend(fontsize=11)
+    ax.legend(fontsize=12)
 
-    fig.suptitle('Accuracy metrics by recoding mode', fontsize=13)
+    fig.suptitle('Метрики точности по режимам перекодировки', fontsize=15)
     plt.tight_layout()
     out = FIGURES_DIR / "accuracy_nmed_mred_snr_main.png"
     plt.savefig(out, dpi=120, bbox_inches='tight')

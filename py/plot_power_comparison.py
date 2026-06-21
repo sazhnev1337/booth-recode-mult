@@ -52,7 +52,7 @@ def plot_main_comparison(data):
     configs = ['booth',
                'booth_extrec_standard', 'booth_extrec_exact',
                'booth_extrec_approx_1', 'booth_extrec_approx_2']
-    short_names = ['booth\n(internal\nencoder)',
+    short_names = ['booth\n(внутр.\nкодировщик)',
                    'booth_extrec\nstandard', 'booth_extrec\nexact',
                    'booth_extrec\napprox_1', 'booth_extrec\napprox_2']
 
@@ -71,13 +71,14 @@ def plot_main_comparison(data):
 
     # Подписи значений над столбиками.
     for i, v in enumerate(values):
-        ax.text(i, v + 5, f'{v:.0f}', ha='center', va='bottom', fontsize=13)
+        ax.text(i, v + 5, f'{v:.0f}', ha='center', va='bottom', fontsize=14)
 
     ax.set_xticks(np.arange(len(configs)))
-    ax.set_xticklabels(short_names, fontsize=13)
-    ax.set_ylabel('Power, µW', fontsize=14)
-    ax.set_title('Power consumption (gauss_slow scenario, realistic for adaptive filter)', fontsize=14)
-    ax.tick_params(axis='y', labelsize=13)
+    ax.set_xticklabels(short_names, fontsize=14)
+    ax.set_ylabel('Мощность, мкВт', fontsize=15)
+    ax.set_title('Потребляемая мощность (сценарий gauss_slow,\n'
+                 'реалистичный для адаптивного фильтра)', fontsize=15)
+    ax.tick_params(axis='y', labelsize=14)
     ax.set_ylim(0, max(values) * 1.15)
     ax.grid(axis='y', alpha=0.3)
 
@@ -85,7 +86,7 @@ def plot_main_comparison(data):
     ax.axhline(y=data['booth']['gauss_slow'], color='#3b82f6',
                linestyle='--', alpha=0.5, linewidth=1)
     ax.text(len(configs) - 0.5, data['booth']['gauss_slow'] + 3,
-            'booth baseline', color='#3b82f6', fontsize=12, ha='right')
+            'базовый booth', color='#3b82f6', fontsize=13, ha='right')
 
     plt.tight_layout()
     out = FIGURES_DIR / "power_dut_comparison_gauss_slow.png"
@@ -113,12 +114,14 @@ def plot_scaling_by_recoding(data):
         ax.plot(x, values, marker='o', label=scn, color=colors[scn], linewidth=2)
 
     ax.set_xticks(x)
-    ax.set_xticklabels(modes)
-    ax.set_xlabel('Recoding mode')
-    ax.set_ylabel('Power, µW')
-    ax.set_title('booth_extrec power vs recoding level (4 scenarios)')
+    ax.set_xticklabels(modes, fontsize=12)
+    ax.tick_params(axis='y', labelsize=12)
+    ax.set_xlabel('Режим перекодировки', fontsize=14)
+    ax.set_ylabel('Мощность, мкВт', fontsize=14)
+    ax.set_title('Мощность booth_extrec по уровню перекодировки (4 сценария)',
+                 fontsize=15)
     ax.grid(True, alpha=0.3)
-    ax.legend()
+    ax.legend(fontsize=12)
 
     plt.tight_layout()
     out = FIGURES_DIR / "power_extrec_vs_recoding_mode.png"

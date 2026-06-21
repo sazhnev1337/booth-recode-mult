@@ -55,9 +55,9 @@ x = np.array(WIDTHS)            # реальные значения N на ос�
 labels = [f"{w}×{w}" for w in WIDTHS]
 xlim = (min(WIDTHS) - 2, max(WIDTHS) + 2)
 
-fig, (axL, axR) = plt.subplots(1, 2, figsize=(12, 5))
+fig, (axL, axR) = plt.subplots(2, 1, figsize=(7, 9))
 
-# ── Левая панель: накладные расходы площади ──────────────────────────
+# ── Верхняя панель: накладные расходы площади ────────────────────────
 axL.axhline(0, color="black", linewidth=0.8)
 axL.plot(x, area_ovh, marker="o", color="#3b82f6", linewidth=2)
 for xi, v in zip(x, area_ovh):
@@ -72,7 +72,7 @@ axL.set_title("Площадь: overhead вынесенной архитекту�
 axL.grid(axis="y", alpha=0.3)
 axL.set_ylim(min(area_ovh) - 2.0, max(area_ovh) + 2.0)
 
-# ── Правая панель: экономия мощности ─────────────────────────────────
+# ── Нижняя панель: экономия мощности ─────────────────────────────────
 axR.axhline(0, color="black", linewidth=0.8)
 axR.plot(x, save_exact, marker="s", color="#10b981", linewidth=2, label="exact")
 axR.plot(x, save_approx2, marker="o", color="#ef4444", linewidth=2, label="approx_2")
